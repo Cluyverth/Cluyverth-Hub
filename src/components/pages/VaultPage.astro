@@ -1,0 +1,154 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Search } from 'lucide';
+import Lucide from 'astro-lucide';
+import NoteMeta from '../NoteMeta.astro';
+import { getVisibleNotes, noteSlug } from '../../lib/notes';
+import { t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dev = import.meta.env.DEV;
+const notes = await getVisibleNotes(locale, dev);
+const notebooks = [...new Set(notes.map((entry) => entry.data.notebook).filter((nb): nb is string => !!nb))];
+const prefix = locale === 'en' ? '' : '/pt';
+---
+
+<Base title={t(locale, 'vault.title')} locale={locale}>
+  <section class="mx-auto max-w-6xl px-6 pt-10 pb-16">
+    <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{t(locale, 'vault.title')}</h1>
+    <p class="mt-4 max-w-xl text-ink-muted dark:text-slate">
+      {t(locale, 'vault.intro')}
+    </p>
+
+    <label class="relative mt-8 block max-w-md">
+      <span class="sr-only">Search</span>
+      <Lucide
+        icon={Search}
+        class="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-ink-muted dark:text-slate"
+      />
+      <input
+        id="vault-search"
+        type="search"
+        placeholder={t(locale, 'vault.search')}
+        autocomplete="off"
+        class="w-full rounded-lg border border-slate/50 bg-paper-deep/40 py-2.5 pr-4 pl-10 text-base outline-none transition-colors placeholder:text-ink-muted/70 focus:border-terra dark:bg-ink-soft/40 dark:focus:border-gold dark:placeholder:text-slate/70"
+      />
+    </label>
+
+    {
+      notebooks.length > 0 && (
+        <div id="notebook-filter" class="mt-4 flex flex-wrap items-center gap-2">
+          <button type="button" data-notebook="" class="notebook-pill notebook-pill-active">{t(locale, 'vault.all')}</button>
+          {
+            notebooks.map((notebook) => (
+              <button type="button" data-notebook={notebook} class="notebook-pill">{notebook}</button>
+            ))
+          }
+        </div>
+      )
+    }
+
+    {
+      notes.length === 0 ? (
+        <p class="mt-12 rounded-lg border border-dashed border-slate/50 p-8 text-center text-base text-ink-muted dark:text-slate">
+          {t(locale, 'vault.empty')}
+        </p>
+      ) : (
+        <ul id="vault-list" class="mt-8">
+          {
+            notes.map((entry) => {
+              const slug = noteSlug(entry);
+              const { title, description, tags, status, image } = entry.data;
+              const searchText = [title, description ?? '', tags.join(' ')].join(' ').toLowerCase();
+              return (
+                <li class="border-b border-slate/40" data-search={searchText} data-notebook={entry.data.notebook ?? ''} data-slug={slug}>
+                  <a
+                    href={`${prefix}/vault/${slug}`}
+                    class:list={['group relative block pt-6 sm:min-h-[200px]', image ? '' : 'pb-6']}
+                  >
+                    {
+                      image && (
+                        <img
+                          src={image}
+                          alt=""
+                          loading="lazy"
+                          class="mb-4 h-40 w-full object-cover sm:hidden"
+                        />
+                      )
+                    }
+                    <span class="relative z-10 block sm:w-[min(64%,720px)]">
+                      <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                        <h2 class="font-serif text-2xl font-bold tracking-tight text-ink transition-colors group-hover:text-terra dark:text-paper dark:group-hover:text-gold">
+                          {title}
+                        </h2>
+                        {status === 'draft' && <span class="status-chip">{t(locale, 'vault.draft')}</span>}
+                      </div>
+                      <div class="mt-2"><NoteMeta entry={entry} showStack={false} showNotebook /></div>
+                      {description && (
+                        <p class="mt-2 max-w-3xl text-base leading-relaxed text-ink-muted dark:text-slate">
+                          {description}
+                        </p>
+                      )}
+                    </span>
+                    {
+                      image && (
+                        <div class="cover-wash absolute bottom-0 right-0 top-6 z-0 hidden sm:block">
+                          <img src={image} alt="" loading="lazy" class="h-full w-full object-cover" />
+                        </div>
+                      )
+                    }
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      )
+    }
+
+    <p id="vault-no-results" class="mt-12 hidden text-base text-ink-muted dark:text-slate">
+      {t(locale, 'vault.noResults')}
+    </p>
+  </section>
+</Base>
+
+<script>
+  const input = document.getElementById('vault-search') as HTMLInputElement | null;
+  const list = document.getElementById('vault-list');
+  const noResults = document.getElementById('vault-no-results');
+  const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('#notebook-filter [data-notebook]'));
+
+  if (input && list && noResults) {
+    const items = Array.from(list.querySelectorAll<HTMLLIElement>('li[data-search]'));
+    let selectedNotebook = '';
+
+    const applyFilters = (): void => {
+      const query = input.value.trim().toLowerCase();
+      let visible = 0;
+      for (const item of items) {
+        const searchMatch = query === '' || (item.dataset.search ?? '').includes(query);
+        const notebookMatch = selectedNotebook === '' || item.dataset.notebook === selectedNotebook;
+        const match = searchMatch && notebookMatch;
+        item.hidden = !match;
+        if (match) visible++;
+      }
+      noResults.hidden = visible !== 0;
+    };
+
+    input.addEventListener('input', applyFilters);
+
+    for (const button of filterButtons) {
+      button.addEventListener('click', () => {
+        selectedNotebook = button.dataset.notebook ?? '';
+        for (const other of filterButtons) {
+          other.classList.toggle('notebook-pill-active', other === button);
+        }
+        applyFilters();
+      });
+    }
+  }
+</script>
