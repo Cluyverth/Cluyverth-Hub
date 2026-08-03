@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Article from '../Article.astro';
+import type { NoteEntry } from '../../lib/notes';
+import { localePrefix, t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  entry: NoteEntry;
+  locale: Locale;
+}
+
+const { entry, locale } = Astro.props;
+---
+
+<Base title={entry.data.title} locale={locale}>
+  <Article entry={entry} locale={locale} backHref={`${localePrefix(locale)}/vault`} backLabel={t(locale, 'nav.vault')} />
+</Base>

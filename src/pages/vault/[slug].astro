@@ -1,0 +1,26 @@
+---
+import VaultNotePage from '../../components/pages/VaultNotePage.astro';
+import { getCollection } from 'astro:content';
+import { isVisible, noteSlug } from '../../lib/notes';
+
+export async function getStaticPaths() {
+  const all = await getCollection('notes');
+  const visible = all.filter((entry) => isVisible(entry, import.meta.env.DEV) && entry.data.lang === 'en');
+  const seen = new Set<string>();
+  const paths = [];
+  for (const entry of visible) {
+    const slug = noteSlug(entry);
+    if (seen.has(slug)) {
+      console.warn(`[vault] duplicate slug "${slug}" in en: only one note will be reachable. Rename one note.`);
+      continue;
+    }
+    seen.add(slug);
+    paths.push({ params: { slug }, props: { entry } });
+  }
+  return paths;
+}
+
+const { entry } = Astro.props;
+---
+
+<VaultNotePage entry={entry} locale="en" />

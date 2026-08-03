@@ -1,0 +1,227 @@
+---
+import NoteMeta from './NoteMeta.astro';
+import { render, type CollectionEntry } from 'astro:content';
+import { getBacklinks } from '../lib/backlinks';
+import { noteSlug } from '../lib/notes';
+import { t, type Locale } from '../lib/i18n';
+
+interface Props {
+  entry: CollectionEntry<'notes'>;
+  locale: Locale;
+  /** Where the back link points, e.g. "/vault". */
+  backHref: string;
+  backLabel: string;
+}
+
+const { entry, locale, backHref, backLabel } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, stack } = entry.data;
+const backlinks = getBacklinks(noteSlug(entry), locale);
+---
+
+<article class="mx-auto max-w-6xl px-6 pt-10 pb-16">
+  <p class="text-base text-ink-muted dark:text-slate">
+    <a href={backHref} class="transition-colors hover:text-terra dark:hover:text-gold">
+      ← {backLabel}
+    </a>
+  </p>
+  <div class="mt-6 lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-10">
+    <div class="min-w-0">
+      <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{title}</h1>
+      <div class="mt-4"><NoteMeta entry={entry} showStack={false} showNotebook /></div>
+      {
+        stack.length > 0 && (
+          <div class="mt-5">
+            <p class="text-sm font-bold uppercase tracking-widest text-ink-muted dark:text-slate">Tech stack</p>
+            <ul class="mt-2 flex flex-wrap gap-2">
+              {
+                stack.map((tech) => (
+                  <li class="rounded-full border border-slate/40 px-2.5 py-0.5 text-sm font-medium text-ink-muted dark:text-slate">
+                    {tech}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        )
+      }
+      <div class="note-prose mt-8"><Content /></div>
+    </div>
+
+    {
+      (headings.length >= 1 || backlinks.length > 0) && (
+        <aside class="hidden lg:block">
+          {
+            (headings.length >= 1 || backlinks.length > 0) && (
+              <div class="sticky top-8 max-h-[calc(100dvh_-_4rem)] overflow-y-auto">
+                {
+                  headings.length >= 1 && (
+                    <nav aria-label="Table of contents">
+                      <p class="text-sm font-bold uppercase tracking-widest text-ink-muted dark:text-slate">
+                        {t(locale, 'toc.title')}
+                      </p>
+                      <ul class="mt-3 space-y-1.5 border-l border-slate/40 pl-4">
+                        {
+                          headings.map((heading, index) => (
+                            <li>
+                              <a
+                                href={`#${heading.slug}`}
+                                class:list={[
+                                  'toc-link flex items-baseline gap-1.5 text-base font-semibold leading-snug text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold',
+                                  heading.depth >= 3 && 'pl-4',
+                                ]}
+                              >
+                                <span class="shrink-0 text-sm text-ink-muted/60 dark:text-slate/60">{index + 1}.</span>
+                                <span>{heading.text}</span>
+                              </a>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </nav>
+                  )
+                }
+                {
+                  backlinks.length > 0 && (
+                    <section class={headings.length >= 1 ? 'mt-10' : undefined} aria-label="Back links">
+                      <p class="text-sm font-bold uppercase tracking-widest text-ink-muted dark:text-slate">
+                        {t(locale, 'toc.backlinks')}
+                      </p>
+                      <ul class="mt-3 space-y-1.5 border-l border-slate/40 pl-4">
+                        {
+                          backlinks.map((backlink, index) => (
+                            <li>
+                              <a
+                                href={backlink.href}
+                                class="flex items-baseline gap-1.5 text-base font-semibold text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+                              >
+                                <span class="shrink-0 text-sm text-ink-muted/60 dark:text-slate/60">{index + 1}.</span>
+                                <span>{backlink.title}</span>
+                              </a>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </section>
+                  )
+                }
+              </div>
+            )
+          }
+        </aside>
+      )
+    }
+  </div>
+</article>
+
+<script>
+  // Scrollspy: the active TOC entry is the last heading above the reading
+  // band; at the end of the page the last entry is forced active.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+  const headings = links
+    .map((link) => document.getElementById(link.getAttribute('href')?.slice(1) ?? ''))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (headings.length > 0) {
+    const BAND_TOP = 80;
+
+    const update = (): void => {
+      let current = -1;
+      for (let i = 0; i < headings.length; i++) {
+        if (headings[i]!.getBoundingClientRect().top - BAND_TOP <= 0) current = i;
+        else break;
+      }
+      if (current === -1) current = 0; // at the top: the first section is active
+      if (
+        current < headings.length - 1 &&
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2
+      ) {
+        current = headings.length - 1;
+      }
+      for (let i = 0; i < links.length; i++) {
+        links[i]!.classList.toggle('toc-link-active', i === current);
+      }
+    };
+
+    // Open at the top of the article, ignoring browser scroll restoration
+    // (which otherwise lands mid-page and activates a later entry). Forced
+    // again after first paint and on pageshow to cover bfcache restores.
+    if (window.location.hash) {
+      const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+      if (target) target.scrollIntoView();
+    } else {
+      history.scrollRestoration = 'manual';
+      const forceTop = (): void => {
+        window.scrollTo(0, 0);
+        update();
+      };
+      forceTop();
+      window.requestAnimationFrame(forceTop);
+      window.addEventListener('pageshow', forceTop);
+      window.addEventListener('load', forceTop);
+      window.setTimeout(forceTop, 250);
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+    for (const link of links) {
+      link.addEventListener('click', () => {
+        for (const other of links) other.classList.toggle('toc-link-active', other === link);
+      });
+    }
+  }
+
+  // Mermaid diagrams: render ```mermaid blocks client-side, only when the
+  // note has any (this is the "hydrate when needed" pattern in action).
+  // The markdown engine highlights code blocks with Shiki, so the mermaid
+  // source arrives inside <pre class="astro-code"> blocks instead of
+  // <code class="language-mermaid">. Detect them by their first line, which
+  // is always the diagram kind.
+  const MERMAID_KINDS = [
+    'flowchart', 'graph', 'sequenceDiagram', 'classDiagram', 'stateDiagram-v2',
+    'stateDiagram', 'erDiagram', 'gantt', 'pie', 'journey', 'mindmap', 'timeline',
+    'gitGraph', 'quadrantChart', 'requirementDiagram', 'C4Context', 'C4Container',
+    'C4Component', 'C4Deployment', 'C4Dynamic', 'block-beta', 'packet-beta',
+    'architecture-beta', 'zenuml', 'sankey-beta', 'xyChart',
+  ];
+
+  const isMermaidBlock = (pre: HTMLPreElement): boolean => {
+    if (pre.querySelector('code.language-mermaid')) return true;
+    const line = (pre.textContent ?? '').trim().split('\n')[0]?.trim() ?? '';
+    return MERMAID_KINDS.some((kind) => line === kind || line.startsWith(`${kind} `));
+  };
+
+  const mermaidSource = (pre: HTMLPreElement): string => {
+    const code = pre.querySelector('code');
+    if (!code) return pre.textContent ?? '';
+    // Shiki wraps each line in a span.line, join them so every statement
+    // lands on its own line, as mermaid requires.
+    const lines = Array.from(code.querySelectorAll<HTMLElement>('span.line'));
+    if (lines.length > 0) return lines.map((line) => line.textContent ?? '').join('\n');
+    return code.textContent ?? '';
+  };
+
+  const mermaidBlocks = Array.from(document.querySelectorAll<HTMLPreElement>('pre')).filter(isMermaidBlock);
+  if (mermaidBlocks.length > 0) {
+    const { default: mermaid } = await import('mermaid');
+    const dark = document.documentElement.classList.contains('dark');
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'strict',
+      theme: dark ? 'dark' : 'neutral',
+    });
+    for (const pre of mermaidBlocks) {
+      const id = `mermaid-${Math.random().toString(36).slice(2, 8)}`;
+      try {
+        const { svg } = await mermaid.render(id, mermaidSource(pre));
+        const holder = document.createElement('div');
+        holder.className = 'mermaid-diagram';
+        holder.innerHTML = svg;
+        pre.replaceWith(holder);
+      } catch {
+        // Leave the raw code block visible if rendering fails.
+      }
+    }
+  }
+</script>
