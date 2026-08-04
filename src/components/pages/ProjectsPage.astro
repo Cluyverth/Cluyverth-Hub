@@ -1,0 +1,79 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getVisibleNotes, noteSlug } from '../../lib/notes';
+import { t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dev = import.meta.env.DEV;
+const projects = (await getVisibleNotes(locale, dev)).filter((entry) => entry.data.project);
+const prefix = locale === 'en' ? '' : '/pt';
+---
+
+<Base title={t(locale, 'projects.title')} locale={locale}>
+  <section class="mx-auto max-w-6xl px-6 pt-10 pb-16">
+    <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{t(locale, 'projects.title')}</h1>
+    <p class="mt-4 max-w-xl text-base text-ink-muted dark:text-slate">
+      {t(locale, 'projects.intro')}
+    </p>
+
+    {
+      projects.length === 0 ? (
+        <p class="mt-12 rounded-lg border border-dashed border-slate/50 p-8 text-center text-base text-ink-muted dark:text-slate">
+          {t(locale, 'projects.empty')}
+        </p>
+      ) : (
+        <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {
+            projects.map((entry, index) => {
+              const slug = noteSlug(entry);
+              const { title, description, stack, image } = entry.data;
+              return (
+                <li class={index === 0 ? 'md:col-span-2' : undefined}>
+                  <a
+                    href={`${prefix}/projects/${slug}`}
+                    class="group relative block h-64 overflow-hidden rounded-sm border border-slate/40"
+                  >
+                    {
+                      image ? (
+                        <img
+                          src={image}
+                          alt=""
+                          loading="lazy"
+                          class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <span class="absolute inset-0 grid place-items-center bg-paper-deep text-ink-muted dark:bg-ink-soft dark:text-slate">
+                          {t(locale, 'projects.noImage')}
+                        </span>
+                      )
+                    }
+                    <span class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-transparent"></span>
+                    <span class="absolute inset-x-0 bottom-0 p-5">
+                      <h2 class="font-serif text-2xl font-bold text-paper">{title}</h2>
+                      {
+                        stack.length > 0 && (
+                          <p class="mt-1.5 flex flex-wrap gap-x-2 text-sm font-semibold text-terra dark:text-gold">
+                            {stack.map((tech) => <span>{tech}</span>)}
+                          </p>
+                        )
+                      }
+                      {description && (
+                        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-paper/80">
+                          {description}
+                        </p>
+                      )}
+                    </span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      )
+    }
+  </section>
+</Base>

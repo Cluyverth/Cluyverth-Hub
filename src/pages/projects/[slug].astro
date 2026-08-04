@@ -1,0 +1,28 @@
+---
+import ProjectNotePage from '../../components/pages/ProjectNotePage.astro';
+import { getCollection } from 'astro:content';
+import { isVisible, noteSlug } from '../../lib/notes';
+
+export async function getStaticPaths() {
+  const all = await getCollection('notes');
+  const visible = all.filter(
+    (entry) => isVisible(entry, import.meta.env.DEV) && entry.data.lang === 'en' && entry.data.project,
+  );
+  const seen = new Set<string>();
+  const paths = [];
+  for (const entry of visible) {
+    const slug = noteSlug(entry);
+    if (seen.has(slug)) {
+      console.warn(`[projects] duplicate slug "${slug}" in en: only one will be reachable. Rename one.`);
+      continue;
+    }
+    seen.add(slug);
+    paths.push({ params: { slug }, props: { entry } });
+  }
+  return paths;
+}
+
+const { entry } = Astro.props;
+---
+
+<ProjectNotePage entry={entry} locale="en" />
