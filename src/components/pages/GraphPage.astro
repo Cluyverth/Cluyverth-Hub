@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+import { buildGraph } from '../../lib/graph-data';
+import { CATEGORY_COLOR, NOTEBOOK_COLOR, NOTES_COLOR, TAG_COLOR } from '../../lib/graph-colors';
+import { t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const graph = buildGraph();
+---
+
+<Base title={t(locale, 'graph.title')} locale={locale}>
+  <section class="mx-auto max-w-6xl px-6 pt-10 pb-16">
+    <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{t(locale, 'graph.title')}</h1>
+    <p class="mt-4 max-w-xl text-ink-muted dark:text-slate">
+      {t(locale, 'graph.intro')}
+    </p>
+    <div id="graph" class="graph" data-graph={JSON.stringify(graph)}></div>
+    <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+      <span class="inline-flex items-center gap-1.5 text-sm text-ink-muted dark:text-slate">
+        <span class="size-2.5 rounded-full" style={`background-color: ${NOTES_COLOR}`}></span>
+        {t(locale, 'graph.legend.notes')}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-sm text-ink-muted dark:text-slate">
+        <span class="size-2.5" style={`background-color: ${CATEGORY_COLOR}`}></span>
+        {t(locale, 'graph.legend.categories')}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-sm text-ink-muted dark:text-slate">
+        <span
+          class="size-2.5"
+          style={`background-color: ${TAG_COLOR}; clip-path: polygon(50% 0, 100% 100%, 0 100%)`}
+        ></span>
+        {t(locale, 'graph.legend.tags')}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-sm text-ink-muted dark:text-slate">
+        <span
+          class="size-2.5"
+          style={`background-color: ${NOTEBOOK_COLOR}; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%)`}
+        ></span>
+        {t(locale, 'graph.legend.notebooks')}
+      </span>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { mountGraph } from '../graph';
+  import type { GraphData } from '../../lib/graph-data';
+
+  const container = document.getElementById('graph');
+  if (container) {
+    const raw = container.dataset.graph;
+    let graph: GraphData | null = null;
+    try {
+      graph = raw ? (JSON.parse(raw) as GraphData) : null;
+    } catch {
+      graph = null;
+    }
+    if (graph) mountGraph(container, graph);
+  }
+</script>
