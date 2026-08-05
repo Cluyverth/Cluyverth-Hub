@@ -1,0 +1,258 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Download, Mail, MapPin } from 'lucide';
+import Lucide from 'astro-lucide';
+import { githubMark, linkedinMark } from '../../lib/brand-icons';
+import { t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const techs = ['Python', 'TypeScript', 'Go', 'FastAPI', 'Django', 'HTMX', 'Docker', 'AWS', 'SQL'];
+
+const experience = [
+  {
+    role: { en: 'Technical Product Owner', pt: 'Product Owner Técnico' },
+    dates: { en: 'Jan 2024 to Mar 2026', pt: 'jan 2024 a mar 2026' },
+    company: 'Companhia Excelsior Seguros',
+    bullets: [
+      {
+        en: 'Eliminated production crashes during peak billing periods by conducting <strong class="font-semibold text-ink dark:text-paper">root-cause analysis</strong> and collaborating with Tech Leads to implement <strong class="font-semibold text-ink dark:text-paper">message queue prioritization</strong> and <strong class="font-semibold text-ink dark:text-paper">Dead Letter Queue (DLQ)</strong> fallback strategies.',
+        pt: 'Eliminei quedas de produção em períodos de pico de cobrança conduzindo <strong class="font-semibold text-ink dark:text-paper">análise de causa raiz</strong> e colaborando com Tech Leads para implementar <strong class="font-semibold text-ink dark:text-paper">priorização de fila de mensagens</strong> e estratégias de fallback com <strong class="font-semibold text-ink dark:text-paper">Dead Letter Queue (DLQ)</strong>.',
+      },
+      {
+        en: 'Enabled future platform scalability by collaborating on the architecture for <strong class="font-semibold text-ink dark:text-paper">internationalization</strong>, <strong class="font-semibold text-ink dark:text-paper">multi-currency</strong> support and <strong class="font-semibold text-ink dark:text-paper">third-party API integrations</strong>.',
+        pt: 'Possibilitei a escalabilidade futura da plataforma colaborando na arquitetura de <strong class="font-semibold text-ink dark:text-paper">internacionalização</strong>, suporte <strong class="font-semibold text-ink dark:text-paper">multi-moeda</strong> e <strong class="font-semibold text-ink dark:text-paper">integrações com APIs de terceiros</strong>.',
+      },
+      {
+        en: 'Improved engineering visibility by developing <strong class="font-semibold text-ink dark:text-paper">Python</strong> automation and data analysis scripts while defining technical requirements for new platform capabilities.',
+        pt: 'Melhorei a visibilidade da engenharia desenvolvendo scripts de automação e análise de dados em <strong class="font-semibold text-ink dark:text-paper">Python</strong> e definindo requisitos técnicos para novas capacidades da plataforma.',
+      },
+      {
+        en: 'Bridged business requirements and engineering implementation by translating product needs into <strong class="font-semibold text-ink dark:text-paper">technical specifications</strong> and coordinating cross-functional development efforts.',
+        pt: 'Conectei requisitos de negócio à implementação de engenharia traduzindo necessidades de produto em <strong class="font-semibold text-ink dark:text-paper">especificações técnicas</strong> e coordenando esforços de desenvolvimento multifuncionais.',
+      },
+    ],
+  },
+  {
+    role: { en: 'Project Assistant', pt: 'Assistente de Projetos' },
+    dates: { en: 'May 2023 to Jan 2024', pt: 'mai 2023 a jan 2024' },
+    company: 'Companhia Excelsior Seguros',
+    bullets: [
+      {
+        en: 'Reduced weekly report generation time from one business day to <strong class="font-semibold text-ink dark:text-paper">15 minutes</strong> by developing <strong class="font-semibold text-ink dark:text-paper">Python</strong> automation scripts.',
+        pt: 'Reduzi o tempo de geração de relatórios semanais de um dia útil para <strong class="font-semibold text-ink dark:text-paper">15 minutos</strong> desenvolvendo scripts de automação em <strong class="font-semibold text-ink dark:text-paper">Python</strong>.',
+      },
+      {
+        en: 'Supported strategic engineering decisions by analyzing <strong class="font-semibold text-ink dark:text-paper">operational data</strong>, identifying behavioral anomalies and delivering actionable stakeholder reports.',
+        pt: 'Apoiei decisões estratégicas de engenharia analisando <strong class="font-semibold text-ink dark:text-paper">dados operacionais</strong>, identificando anomalias comportamentais e entregando relatórios acionáveis para as partes interessadas.',
+      },
+      {
+        en: 'Improved cross-functional alignment by gathering <strong class="font-semibold text-ink dark:text-paper">technical requirements</strong> and coordinating communication between engineering and business teams.',
+        pt: 'Melhorei o alinhamento multifuncional levantando <strong class="font-semibold text-ink dark:text-paper">requisitos técnicos</strong> e coordenando a comunicação entre engenharia e negócio.',
+      },
+    ],
+  },
+  {
+    role: { en: 'Project and Process Intern', pt: 'Estagiário de Projetos e Processos' },
+    dates: { en: 'May 2022 to May 2023', pt: 'mai 2022 a mai 2023' },
+    company: 'Companhia Excelsior de Seguros',
+    bullets: [
+      {
+        en: 'Reduced legacy process execution time by <strong class="font-semibold text-ink dark:text-paper">over 90%</strong> (<strong class="font-semibold text-ink dark:text-paper">8 hours to 30 minutes</strong>) by optimizing internal workflows and automating repetitive tasks.',
+        pt: 'Reduzi o tempo de execução de processos legados em <strong class="font-semibold text-ink dark:text-paper">mais de 90%</strong> (<strong class="font-semibold text-ink dark:text-paper">de 8 horas para 30 minutos</strong>) otimizando fluxos internos e automatizando tarefas repetitivas.',
+      },
+      {
+        en: 'Eliminated repetitive manual reporting by developing <strong class="font-semibold text-ink dark:text-paper">Python</strong> automation scripts with <strong class="font-semibold text-ink dark:text-paper">Pandas</strong> for cross-functional teams.',
+        pt: 'Eliminei relatórios manuais repetitivos desenvolvendo scripts de automação em <strong class="font-semibold text-ink dark:text-paper">Python</strong> com <strong class="font-semibold text-ink dark:text-paper">Pandas</strong> para equipes multifuncionais.',
+      },
+    ],
+  },
+];
+
+const education = [
+  {
+    degree: { en: 'Computer Software Engineering, Postgraduate', pt: 'Engenharia de Software, Pós-graduação' },
+    school: { en: 'PUC Minas, Jun 2025', pt: 'PUC Minas, jun 2025' },
+    bullets: [
+      {
+        en: 'Developed a financial management system using <strong class="font-semibold text-ink dark:text-paper">C#</strong>, <strong class="font-semibold text-ink dark:text-paper">ASP.NET MVC</strong>, and <strong class="font-semibold text-ink dark:text-paper">SQL Server</strong>, implementing full <strong class="font-semibold text-ink dark:text-paper">CRUD</strong> operations and leveraging <strong class="font-semibold text-ink dark:text-paper">Docker</strong> for containerization to streamline backend integration.',
+        pt: 'Desenvolvi um sistema de gestão financeira usando <strong class="font-semibold text-ink dark:text-paper">C#</strong>, <strong class="font-semibold text-ink dark:text-paper">ASP.NET MVC</strong> e <strong class="font-semibold text-ink dark:text-paper">SQL Server</strong>, implementando operações <strong class="font-semibold text-ink dark:text-paper">CRUD</strong> completas e usando <strong class="font-semibold text-ink dark:text-paper">Docker</strong> para containerização e integração de backend.',
+      },
+    ],
+  },
+  {
+    degree: { en: 'Mechatronics, Robotics and Automation, Bachelor of Engineering', pt: 'Mecatrônica, Robótica e Automação, Bacharelado em Engenharia' },
+    school: { en: 'Wyden, Dec 2022', pt: 'Wyden, dez 2022' },
+    bullets: [
+      {
+        en: 'Developed and tuned a <strong class="font-semibold text-ink dark:text-paper">PID-based</strong> temperature control system, improving thermal stability and precision through automated feedback loops.',
+        pt: 'Desenvolvi e ajustei um sistema de controle de temperatura <strong class="font-semibold text-ink dark:text-paper">baseado em PID</strong>, melhorando estabilidade térmica e precisão com loops de feedback automatizados.',
+      },
+      {
+        en: 'Co-developed a hardware-software integrated digital thermometer, programming the <strong class="font-semibold text-ink dark:text-paper">microcontrollers in C</strong> to ensure accurate real-time data sampling.',
+        pt: 'Codesenvolvi um termômetro digital integrado hardware-software, programando os <strong class="font-semibold text-ink dark:text-paper">microcontroladores em C</strong> para garantir amostragem precisa de dados em tempo real.',
+      },
+      {
+        en: 'Designed a comprehensive electrical system simulation for a commercial building, ensuring strict compliance with <strong class="font-semibold text-ink dark:text-paper">NBR</strong> regulatory standards.',
+        pt: 'Projetei uma simulação completa do sistema elétrico de um edifício comercial, garantindo conformidade estrita com as normas regulatórias <strong class="font-semibold text-ink dark:text-paper">NBR</strong>.',
+      },
+    ],
+  },
+];
+
+const languages = [
+  { name: 'Portuguese', level: { en: 'native', pt: 'nativo' } },
+  { name: 'English', level: { en: 'professional working proficiency', pt: 'proficiência profissional' } },
+  { name: 'Japanese', level: { en: 'basic, N5', pt: 'básico, N5' } },
+];
+---
+
+<Base title={t(locale, 'about.title')} locale={locale}>
+  <section class="mx-auto max-w-6xl px-6 pt-10 pb-16">
+    <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{t(locale, 'about.title')}</h1>
+
+    <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
+      <div class="min-w-0">
+        <p class="max-w-3xl text-lg leading-relaxed text-ink-muted dark:text-slate">
+          {t(locale, 'about.intro')}
+        </p>
+
+        <h2 class="mt-10 font-serif text-xl font-bold tracking-tight">{t(locale, 'about.techstack')}</h2>
+        <ul class="mt-3 flex flex-wrap gap-2">
+          {
+            techs.map((tech) => (
+              <li class="rounded-full border border-slate/40 px-2.5 py-0.5 text-sm font-medium text-ink-muted dark:text-slate">
+                {tech}
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2 class="mt-14 font-serif text-2xl font-bold tracking-tight">{t(locale, 'about.experience')}</h2>
+        <div class="mt-6 space-y-10">
+          {
+            experience.map((job) => (
+              <section>
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 class="font-serif text-xl font-bold tracking-tight">{job.role[locale]}</h3>
+                  <p class="text-sm font-medium text-ink-muted dark:text-slate">{job.dates[locale]}</p>
+                </div>
+                <p class="mt-1 text-sm font-semibold text-terra dark:text-gold">{job.company}</p>
+                <ul class="mt-3 list-disc space-y-2 pl-5 text-base leading-relaxed text-ink-muted dark:text-slate">
+                  {job.bullets.map((bullet) => (
+                    <li set:html={bullet[locale]} />
+                  ))}
+                </ul>
+              </section>
+            ))
+          }
+        </div>
+
+        <h2 class="mt-14 font-serif text-2xl font-bold tracking-tight">{t(locale, 'about.education')}</h2>
+        <div class="mt-6 space-y-8">
+          {
+            education.map((item) => (
+              <section>
+                <h3 class="font-serif text-xl font-bold tracking-tight">{item.degree[locale]}</h3>
+                <p class="mt-1 text-sm font-medium text-terra dark:text-gold">{item.school[locale]}</p>
+                <ul class="mt-3 list-disc space-y-2 pl-5 text-base leading-relaxed text-ink-muted dark:text-slate">
+                  {item.bullets.map((bullet) => (
+                    <li set:html={bullet[locale]} />
+                  ))}
+                </ul>
+              </section>
+            ))
+          }
+        </div>
+
+        <h2 class="mt-14 font-serif text-2xl font-bold tracking-tight">{t(locale, 'about.languages')}</h2>
+        <ul class="mt-4 space-y-1.5 text-base text-ink-muted dark:text-slate">
+          {
+            languages.map((lang) => (
+              <li><span class="font-semibold text-ink dark:text-paper">{lang.name}</span> ({lang.level[locale]})</li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <aside class="lg:sticky lg:top-8 lg:self-start">
+        <img
+          src="/avatar.webp"
+          alt="Cluyverth Pereira"
+          width="160"
+          height="160"
+          loading="lazy"
+          class="size-40 rounded-full border border-slate/40 object-cover"
+        />
+        <p class="mt-5 text-lg font-bold">Cluyverth Pereira</p>
+        <p class="text-sm text-ink-muted dark:text-slate">@cluyverth</p>
+        <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-base">
+          <a
+            href="https://github.com/Cluyverth"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={githubMark} class="size-4 text-terra dark:text-gold" />
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/cluyverth/"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={linkedinMark} class="size-4 text-terra dark:text-gold" />
+            LinkedIn
+          </a>
+        </div>
+
+        <div class="mt-6 space-y-3 text-base">
+          <button
+            id="copy-email"
+            type="button"
+            class="flex cursor-pointer items-center gap-3 transition-colors hover:text-terra dark:hover:text-gold"
+          >
+            <Lucide icon={Mail} class="size-4 shrink-0 text-terra dark:text-gold" />
+            <span data-copy-label>contact@cluyverth.com</span>
+          </button>
+          <p class="flex items-center gap-3">
+            <Lucide icon={MapPin} class="size-4 shrink-0 text-terra dark:text-gold" />
+            {t(locale, 'about.location')}
+          </p>
+        </div>
+
+        <a
+          href="/resume.pdf"
+          download
+          class="mt-8 inline-flex items-center gap-2 rounded-lg border border-slate/50 px-4 py-2 font-semibold text-terra transition-colors hover:border-terra dark:text-gold dark:hover:border-gold"
+        >
+          <Lucide icon={Download} class="size-4" />
+          {t(locale, 'about.resume')}
+        </a>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  document.getElementById('copy-email')?.addEventListener('click', async () => {
+    const email = 'contact@cluyverth.com';
+    const label = document.querySelector('[data-copy-label]');
+    try {
+      await navigator.clipboard.writeText(email);
+      if (label) {
+        label.textContent = 'Copied!';
+        setTimeout(() => {
+          label.textContent = email;
+        }, 1500);
+      }
+    } catch {
+      if (label) label.textContent = email;
+    }
+  });
+</script>
