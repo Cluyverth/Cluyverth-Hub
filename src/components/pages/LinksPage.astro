@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import { ChevronDown, ExternalLink } from 'lucide';
+import Lucide from 'astro-lucide';
+import { linkGroups } from '../../data/links';
+import { t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+function groupTitle(group: { title: string; kind: string }): string {
+  if (group.title === 'Social') return t(locale, 'links.social');
+  if (group.title === 'My Setup') return t(locale, 'links.setup');
+  return group.title;
+}
+---
+
+<Base title={t(locale, 'links.title')} locale={locale}>
+  <section class="mx-auto max-w-3xl px-6 pt-10 pb-16">
+    <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{t(locale, 'links.title')}</h1>
+    <p class="mt-4 text-ink-muted dark:text-slate">
+      {t(locale, 'links.intro')}
+    </p>
+
+    {
+      linkGroups.map(
+        (group, index) =>
+          group.links.length === 0 ? null : (
+            <details class="link-group" open={index === 0}>
+              <summary>
+                <span class="text-base font-bold uppercase tracking-widest">{groupTitle(group)}</span>
+                <Lucide icon={ChevronDown} class="link-group-chevron size-4" />
+              </summary>
+              <ul class="link-group-list">
+                {
+                  group.links.map((link) => (
+                    <li>
+                      {
+                        link.url ? (
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel={group.kind === 'affiliate' ? 'sponsored noopener' : 'noopener'}
+                            class="link-row group"
+                          >
+                            <Lucide icon={link.icon} class="size-4 shrink-0 text-terra dark:text-gold" />
+                            <span class="font-medium">{link.label}</span>
+                            {group.kind === 'affiliate' && (
+                              <span class="ml-auto text-sm text-ink-muted dark:text-slate">sponsored</span>
+                            )}
+                            <Lucide
+                              icon={ExternalLink}
+                              class="size-3.5 text-ink-muted opacity-0 transition-opacity group-hover:opacity-100 dark:text-slate"
+                            />
+                          </a>
+                        ) : (
+                          <span class="link-row">
+                            <Lucide icon={link.icon} class="size-4 shrink-0 text-terra dark:text-gold" />
+                            <span class="font-medium">{link.label}</span>
+                            <span class="ml-auto text-sm text-ink-muted dark:text-slate">{t(locale, 'links.comingSoon')}</span>
+                          </span>
+                        )
+                      }
+                    </li>
+                  ))
+                }
+              </ul>
+            </details>
+          ),
+      )
+    }
+  </section>
+</Base>
