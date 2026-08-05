@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Mail } from 'lucide';
+import Lucide from 'astro-lucide';
+import { githubMark, linkedinMark } from '../../lib/brand-icons';
+import { t, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Base locale={locale}>
+  <section class="mx-auto max-w-6xl px-6 pt-16 pb-16">
+    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-12 xl:gap-20">
+      <div class="max-w-3xl">
+        <h1 class="text-6xl font-bold leading-tight tracking-tight md:text-7xl">
+          <span class="block">Cluyverth</span>
+          <span class="block pl-48 text-terra dark:text-gold">Hub</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted dark:text-slate">
+          {t(locale, 'hero.motto')}
+        </p>
+      </div>
+
+      <aside class="-mr-6 mt-12 flex flex-col items-end md:mt-2">
+        <img
+          src="/avatar.webp"
+          alt="Cluyverth Pereira"
+          width="160"
+          height="160"
+          loading="eager"
+          class="size-40 rounded-full border border-slate/40 object-cover"
+        />
+        <p class="mt-4 text-base font-semibold">Cluyverth Pereira</p>
+        <p class="text-sm text-ink-muted dark:text-slate">@cluyverth</p>
+        <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-base">
+          <a
+            href="https://github.com/Cluyverth"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={githubMark} class="size-4 text-terra dark:text-gold" />
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/cluyverth/"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={linkedinMark} class="size-4 text-terra dark:text-gold" />
+            LinkedIn
+          </a>
+          <button
+            id="copy-email"
+            type="button"
+            class="inline-flex cursor-pointer items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={Mail} class="size-4 text-terra dark:text-gold" />
+            <span data-copy-label>Email</span>
+          </button>
+        </div>
+        <p class="mt-3 max-w-[19rem] text-right text-base italic leading-relaxed text-ink-muted dark:text-slate">
+          &quot;{t(locale, 'hero.quote')}&quot; <span class="whitespace-nowrap text-sm not-italic">- {t(locale, 'hero.seneca')}</span>
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  document.getElementById('copy-email')?.addEventListener('click', async () => {
+    const email = 'contact@cluyverth.com';
+    const label = document.querySelector('[data-copy-label]');
+    try {
+      await navigator.clipboard.writeText(email);
+      if (label) {
+        label.textContent = 'Copied!';
+        setTimeout(() => {
+          label.textContent = 'Email';
+        }, 1500);
+      }
+    } catch {
+      if (label) label.textContent = email;
+    }
+  });
+</script>
