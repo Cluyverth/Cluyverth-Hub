@@ -1,0 +1,63 @@
+---
+import { BookOpen, Calendar, Clock, FolderOpen, Layers, Tags, Text } from 'lucide';
+import Lucide from 'astro-lucide';
+import type { NoteEntry } from '../lib/notes';
+import { readingStats } from '../lib/reading';
+
+interface Props {
+  entry: NoteEntry;
+  /** Show the tech stack item (project detail pages). */
+  showStack?: boolean;
+  /** Show the notebook item (vault list). */
+  showNotebook?: boolean;
+}
+
+const { entry, showStack = true, showNotebook = false } = Astro.props;
+const { words, minutes } = readingStats(entry.body ?? '');
+const { category, notebook, stack, tags, date } = entry.data;
+---
+
+<div class="meta-row">
+  <span class="meta-item meta-date">
+    <Lucide icon={Calendar} class="size-3.5" />
+    {date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })}
+  </span>
+  {
+    showNotebook && notebook && (
+      <span class="meta-item meta-notebook">
+        <Lucide icon={BookOpen} class="size-3.5" />
+        {notebook}
+      </span>
+    )
+  }
+  {category && (
+    <span class="meta-item meta-category">
+      <Lucide icon={FolderOpen} class="size-3.5" />
+      {category}
+    </span>
+  )}
+  {
+    showStack && stack.length > 0 && (
+      <span class="meta-item meta-stack">
+        <Lucide icon={Layers} class="size-3.5" />
+        {stack.map((tech) => <span>{tech}</span>)}
+      </span>
+    )
+  }
+  <span class="meta-item meta-words">
+    <Lucide icon={Text} class="size-3.5" />
+    {words} {words === 1 ? 'word' : 'words'}
+  </span>
+  <span class="meta-item meta-reading">
+    <Lucide icon={Clock} class="size-3.5" />
+    {minutes} min read
+  </span>
+  {
+    tags.length > 0 && (
+      <span class="meta-item meta-tags">
+        <Lucide icon={Tags} class="size-3.5" />
+        {tags.map((tag) => <span>#{tag}</span>)}
+      </span>
+    )
+  }
+</div>
