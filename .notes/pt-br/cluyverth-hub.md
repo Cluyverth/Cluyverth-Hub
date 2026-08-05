@@ -10,7 +10,7 @@ stack: [Astro, TypeScript, Tailwind CSS]
 category: Projects
 notebook: Cluyverth Hub
 tags: [astro, web, static-site, ci-cd]
-image: /cluyverth-hub.webp
+image: /images/cluyverth-hub.png
 description: "O próprio site. Como ele é construído, publicado e mantido privado, e por quê."
 ---
 
