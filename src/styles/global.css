@@ -1,0 +1,349 @@
+@import "@fontsource-variable/inter";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* class-based dark mode (Tailwind v4 default variant is media-based) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* carcará palette, derived from the bird's plumage, skin and beak:
+     ink/paper = neutral base, terra = primary accent, gold = secondary,
+     slate = muted text + borders */
+  --color-ink: #131313;
+  --color-ink-soft: #2a2a2a;
+  --color-ink-muted: #5c5c5c;
+  --color-paper: #faf9f5;
+  --color-paper-deep: #ece9de;
+  --color-terra: #d96c3b;
+  --color-terra-deep: #b45328;
+  --color-gold: #eac148;
+  --color-slate: #94a4b1;
+
+  /* self-hosted Inter variable font across the whole site */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  font-size: 18px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-terra);
+  outline-offset: 2px;
+}
+
+.dark :focus-visible {
+  outline-color: var(--color-gold);
+}
+
+/* CP monogram logo, plain text, no box */
+.logo-mark {
+  @apply font-serif text-2xl font-bold tracking-tight text-terra dark:text-gold;
+}
+
+/* Nav links with an underline that appears on hover and stays on the
+   active page, colored with the accent */
+.nav-link {
+  @apply relative px-0.5 pb-1.5 text-base font-bold text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-terra);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.15s ease;
+}
+
+.dark .nav-link::after {
+  background: var(--color-gold);
+}
+
+.nav-link:hover::after,
+.nav-link-active::after {
+  transform: scaleX(1);
+}
+
+.nav-link-active {
+  @apply text-terra dark:text-gold;
+}
+
+/* Theme toggle: icon button, no circle */
+.theme-toggle {
+  @apply grid size-8 place-items-center rounded-md text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold;
+}
+
+.theme-toggle .theme-icon-sun {
+  display: none;
+}
+
+.dark .theme-toggle .theme-icon-sun {
+  display: block;
+}
+
+.dark .theme-toggle .theme-icon-moon {
+  display: none;
+}
+
+/* Note metadata row (navfolio-style): colored icons, no chips */
+.meta-row {
+  @apply flex flex-wrap items-center gap-x-4 gap-y-1.5 text-base text-ink-muted dark:text-slate;
+}
+
+.meta-item {
+  @apply inline-flex items-center gap-1.5;
+}
+
+.meta-date svg {
+  color: #d88742;
+}
+
+.meta-category svg {
+  color: #8b76df;
+}
+
+.meta-words svg {
+  color: #3f9c6a;
+}
+
+.meta-reading svg {
+  color: #4d83d6;
+}
+
+.meta-tags svg {
+  color: #c8649f;
+}
+
+.meta-stack svg {
+  color: #c69a2e;
+}
+
+.meta-notebook svg {
+  color: #3f9c6a;
+}
+
+/* Draft marker: plain accent text, no badge shape */
+.status-chip {
+  @apply text-sm font-bold uppercase tracking-wide text-terra dark:text-gold;
+}
+
+/* TOC entries with the nav-style underline on the active one */
+.toc-link {
+  position: relative;
+}
+
+.toc-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-terra);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.15s ease;
+}
+
+.dark .toc-link::after {
+  background: var(--color-gold);
+}
+
+.toc-link:hover::after,
+.toc-link-active::after {
+  transform: scaleX(1);
+}
+
+/* TOC active entry: accent color, bolder */
+.toc-link-active {
+  @apply font-bold text-terra dark:text-gold;
+}
+
+/* Rendered note body, styled by @tailwindcss/typography with carcará vars */
+.note-prose {
+  @apply prose prose-slate max-w-none dark:prose-invert;
+  font-size: 1.125rem;
+  --tw-prose-links: var(--color-terra);
+  --tw-prose-bullets: var(--color-terra);
+  --tw-prose-counters: var(--color-terra);
+  --tw-prose-quote-borders: var(--color-terra);
+}
+
+.dark .note-prose {
+  --tw-prose-links: var(--color-gold);
+  --tw-prose-bullets: var(--color-gold);
+  --tw-prose-counters: var(--color-gold);
+  --tw-prose-quote-borders: var(--color-gold);
+}
+
+.note-prose :is(h2, h3) {
+  scroll-margin-top: 2rem;
+}
+
+/* Obsidian-style unresolved wikilink: dimmed, never a dead link */
+.unresolved {
+  @apply italic text-ink-muted/70 dark:text-slate/70;
+}
+
+/* Graph container */
+.graph {
+  @apply mt-10 overflow-hidden rounded-xl border border-slate/40;
+  height: 520px;
+}
+
+.graph-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.graph-link {
+  stroke: var(--color-slate);
+  stroke-opacity: 0.35;
+  stroke-width: 1.5;
+}
+
+.graph-label {
+  fill: var(--color-ink);
+  font-size: 12px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.dark .graph-label {
+  fill: var(--color-paper);
+}
+
+.graph-node:hover circle,
+.graph-node:hover rect,
+.graph-node:hover polygon,
+.graph-node:focus-visible circle,
+.graph-node:focus-visible rect,
+.graph-node:focus-visible polygon {
+  fill: var(--color-gold);
+}
+
+.dark .graph-node:hover circle,
+.dark .graph-node:hover rect,
+.dark .graph-node:hover polygon,
+.dark .graph-node:focus-visible circle,
+.dark .graph-node:focus-visible rect,
+.dark .graph-node:focus-visible polygon {
+  fill: var(--color-terra);
+}
+
+.graph-empty {
+  @apply p-8 text-center text-sm text-ink-muted dark:text-slate;
+}
+
+/* Cover wash: navfolio-style image bleeding from the right, faded via a mask
+   on the image itself (no overlay band), semi-transparent, full on hover */
+.cover-wash {
+  width: min(38%, 520px);
+  border-radius: 2px;
+  overflow: hidden;
+  opacity: 0.72;
+  filter: saturate(0.82) contrast(0.96);
+  mask-image: linear-gradient(90deg, transparent, #000 48%),
+    radial-gradient(140% 120% at 100%, #000 54%, transparent 76%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+.group:hover .cover-wash {
+  opacity: 0.9;
+  filter: saturate(0.9) contrast(0.98);
+}
+
+.dark .cover-wash {
+  filter: none;
+  opacity: 0.62;
+}
+
+.dark .group:hover .cover-wash {
+  opacity: 0.82;
+}
+
+.lang-active {
+  @apply text-terra dark:text-gold;
+}
+
+.lang-inactive {
+  @apply text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold;
+}
+
+/* Floating back-to-top button */
+.scroll-top {
+  @apply fixed right-6 bottom-6 z-50 grid size-10 place-items-center rounded-lg border border-slate/40 bg-paper-deep/80 text-ink-muted opacity-0 transition-opacity duration-200 hover:border-terra hover:text-terra dark:bg-ink-soft/80 dark:text-slate dark:hover:border-gold dark:hover:text-gold;
+}
+
+.scroll-top[data-visible="true"] {
+  opacity: 1;
+}
+
+/* Notebook filter pills */
+.notebook-pill {
+  @apply rounded-full border border-slate/40 px-3 py-1 text-sm font-medium text-ink-muted transition-colors hover:border-terra hover:text-terra dark:text-slate dark:hover:border-gold dark:hover:text-gold;
+}
+
+.notebook-pill-active {
+  @apply border-terra text-terra dark:border-gold dark:text-gold;
+}
+
+/* Client-rendered mermaid diagrams */
+.mermaid-diagram {
+  @apply my-6 overflow-x-auto rounded-xl border border-slate/40 bg-paper-deep/50 p-4 dark:bg-ink-soft/50;
+}
+
+/* Render diagrams at their native size and scroll horizontally when they
+   are wider than the column. Shrinking the SVG scales the text down with
+   it, which is what made the labels unreadable. */
+.mermaid-diagram svg {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: none;
+  margin-inline: auto;
+}
+
+/* Links page: collapsible groups (native details/summary, no JS) */
+.link-group {
+  @apply mt-10;
+}
+
+.link-group summary {
+  @apply flex cursor-pointer list-none items-center justify-between border-b border-slate/40 py-3 text-sm font-medium uppercase tracking-widest text-ink-muted select-none transition-colors hover:text-terra dark:text-slate dark:hover:text-gold;
+}
+
+.link-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.link-group-chevron {
+  transition: transform 0.15s ease;
+}
+
+.link-group[open] .link-group-chevron {
+  transform: rotate(180deg);
+}
+
+.link-group-list {
+  @apply space-y-2 pt-4 pb-6;
+}
+
+/* Links page rows: icon has no background, the accent carries it */
+.link-row {
+  @apply flex items-center gap-3 rounded-xl border border-slate/50 bg-paper-deep/30 px-4 py-3 transition-all hover:border-terra hover:shadow-sm hover:shadow-terra/10 dark:bg-ink-soft/30 dark:hover:border-gold dark:hover:shadow-gold/10;
+}
