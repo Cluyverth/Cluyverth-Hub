@@ -1,4 +1,7 @@
 ---
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import { Download, Mail, MapPin } from 'lucide';
 import Lucide from 'astro-lucide';
@@ -10,6 +13,13 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+
+// Content hash busts browser and CDN caches whenever resume.pdf changes.
+// Resolve from the project root: prerender chunks run from dist/.
+const resumeVersion = createHash('md5')
+  .update(readFileSync(join(process.cwd(), 'public', 'resume.pdf')))
+  .digest('hex')
+  .slice(0, 8);
 
 const techs = ['Python', 'TypeScript', 'Go', 'FastAPI', 'Django', 'HTMX', 'Docker', 'AWS', 'SQL'];
 
@@ -227,7 +237,7 @@ const languages = [
         </div>
 
         <a
-          href="/resume.pdf"
+          href={`/resume.pdf?v=${resumeVersion}`}
           download
           class="mt-8 inline-flex items-center gap-2 rounded-lg border border-slate/50 px-4 py-2 font-semibold text-terra transition-colors hover:border-terra dark:text-gold dark:hover:border-gold"
         >
