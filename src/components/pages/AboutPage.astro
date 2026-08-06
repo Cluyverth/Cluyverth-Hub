@@ -123,16 +123,74 @@ const languages = [
 
 <Base title={t(locale, 'about.title')} locale={locale}>
   <section class="mx-auto max-w-6xl px-6 pt-10 pb-16">
-    <h1 class="font-serif text-4xl font-bold tracking-tight md:text-5xl">{t(locale, 'about.title')}</h1>
+    <h1 class="hidden font-serif text-4xl font-bold tracking-tight md:text-5xl lg:block">{t(locale, 'about.title')}</h1>
 
-    <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
-      <div class="min-w-0">
-        <p class="max-w-3xl text-lg leading-relaxed text-ink-muted dark:text-slate">
-          {t(locale, 'about.intro')}
+    <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
+      <aside class="flex flex-col items-center text-center lg:sticky lg:top-28 lg:col-start-2 lg:row-start-1 lg:items-end lg:self-start lg:text-right">
+        <img
+          src="/avatar.webp"
+          alt="Cluyverth Pereira"
+          width="160"
+          height="160"
+          loading="lazy"
+          class="size-40 rounded-full border border-slate/40 object-cover"
+        />
+        <p class="mt-5 text-lg font-bold">Cluyverth Pereira</p>
+        <p class="text-sm text-ink-muted dark:text-slate">@cluyverth</p>
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-base lg:justify-end">
+          <a
+            href="https://github.com/Cluyverth"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={githubMark} class="size-4 text-terra dark:text-gold" />
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/cluyverth/"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={linkedinMark} class="size-4 text-terra dark:text-gold" />
+            LinkedIn
+          </a>
+          <button
+            id="copy-email"
+            type="button"
+            class="inline-flex cursor-pointer items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
+          >
+            <Lucide icon={Mail} class="size-4 text-terra dark:text-gold" />
+            <span data-copy-label>Email</span>
+          </button>
+        </div>
+
+        <p class="mt-4 flex items-center justify-center gap-3 lg:justify-end">
+          <Lucide icon={MapPin} class="size-4 shrink-0 text-terra dark:text-gold" />
+          {t(locale, 'about.location')}
         </p>
 
-        <h2 class="mt-10 font-serif text-xl font-bold tracking-tight">{t(locale, 'about.techstack')}</h2>
-        <ul class="mt-3 flex flex-wrap gap-2">
+        <a
+          href={`/resume.pdf?v=${resumeVersion}`}
+          download
+          class="mt-8 inline-flex items-center gap-2 rounded-lg border border-slate/50 px-4 py-2 font-semibold text-terra transition-colors hover:border-terra dark:text-gold dark:hover:border-gold"
+        >
+          <Lucide icon={Download} class="size-4" />
+          {t(locale, 'about.resume')}
+        </a>
+      </aside>
+
+      <div class="flex min-w-0 flex-col lg:col-start-1 lg:row-start-1">
+        <div class="order-2 hidden lg:order-1 lg:block">
+          <p class="mt-8 max-w-3xl text-lg leading-relaxed text-ink-muted dark:text-slate lg:mt-0">
+            {t(locale, 'about.intro')}
+          </p>
+        </div>
+
+        <div class="order-1 lg:order-2">
+          <h2 class="mt-0 font-serif text-xl font-bold tracking-tight lg:mt-10">{t(locale, 'about.techstack')}</h2>
+          <ul class="mt-3 flex flex-wrap gap-2">
           {
             techs.map((tech) => (
               <li class="rounded-full border border-slate/40 px-2.5 py-0.5 text-sm font-medium text-ink-muted dark:text-slate">
@@ -141,7 +199,9 @@ const languages = [
             ))
           }
         </ul>
+        </div>
 
+        <div class="order-3">
         <h2 class="mt-14 font-serif text-2xl font-bold tracking-tight">{t(locale, 'about.experience')}</h2>
         <div class="mt-6 space-y-10">
           {
@@ -187,64 +247,9 @@ const languages = [
             ))
           }
         </ul>
+        </div>
       </div>
 
-      <aside class="lg:sticky lg:top-8 lg:self-start">
-        <img
-          src="/avatar.webp"
-          alt="Cluyverth Pereira"
-          width="160"
-          height="160"
-          loading="lazy"
-          class="size-40 rounded-full border border-slate/40 object-cover"
-        />
-        <p class="mt-5 text-lg font-bold">Cluyverth Pereira</p>
-        <p class="text-sm text-ink-muted dark:text-slate">@cluyverth</p>
-        <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-base">
-          <a
-            href="https://github.com/Cluyverth"
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
-          >
-            <Lucide icon={githubMark} class="size-4 text-terra dark:text-gold" />
-            GitHub
-          </a>
-          <a
-            href="https://www.linkedin.com/in/cluyverth/"
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold"
-          >
-            <Lucide icon={linkedinMark} class="size-4 text-terra dark:text-gold" />
-            LinkedIn
-          </a>
-        </div>
-
-        <div class="mt-6 space-y-3 text-base">
-          <button
-            id="copy-email"
-            type="button"
-            class="flex cursor-pointer items-center gap-3 transition-colors hover:text-terra dark:hover:text-gold"
-          >
-            <Lucide icon={Mail} class="size-4 shrink-0 text-terra dark:text-gold" />
-            <span data-copy-label>contact@cluyverth.com</span>
-          </button>
-          <p class="flex items-center gap-3">
-            <Lucide icon={MapPin} class="size-4 shrink-0 text-terra dark:text-gold" />
-            {t(locale, 'about.location')}
-          </p>
-        </div>
-
-        <a
-          href={`/resume.pdf?v=${resumeVersion}`}
-          download
-          class="mt-8 inline-flex items-center gap-2 rounded-lg border border-slate/50 px-4 py-2 font-semibold text-terra transition-colors hover:border-terra dark:text-gold dark:hover:border-gold"
-        >
-          <Lucide icon={Download} class="size-4" />
-          {t(locale, 'about.resume')}
-        </a>
-      </aside>
     </div>
   </section>
 </Base>

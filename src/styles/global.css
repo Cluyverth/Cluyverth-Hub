@@ -22,6 +22,13 @@
   /* self-hosted Inter variable font across the whole site */
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-serif: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* custom breakpoints: the full nav appears at 900px+, the home page
+     splits profile and quick nav side by side at 1000px+, and switches to
+     the desktop layout only at 1350px+ */
+  --breakpoint-nav: 900px;
+  --breakpoint-mid: 1000px;
+  --breakpoint-wide: 1350px;
 }
 
 html {
@@ -187,7 +194,7 @@ html {
 }
 
 .note-prose :is(h2, h3) {
-  scroll-margin-top: 2rem;
+  scroll-margin-top: 7rem;
 }
 
 /* Obsidian-style unresolved wikilink: dimmed, never a dead link */
@@ -284,9 +291,23 @@ html {
   @apply text-ink-muted transition-colors hover:text-terra dark:text-slate dark:hover:text-gold;
 }
 
+/* Full-screen mobile menu overlay: fades in each time it is opened */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.menu-panel {
+  animation: menu-in 0.15s ease;
+}
+
 /* Floating back-to-top button */
 .scroll-top {
-  @apply fixed right-6 bottom-6 z-50 grid size-10 place-items-center rounded-lg border border-slate/40 bg-paper-deep/80 text-ink-muted opacity-0 transition-opacity duration-200 hover:border-terra hover:text-terra dark:bg-ink-soft/80 dark:text-slate dark:hover:border-gold dark:hover:text-gold;
+  @apply fixed right-6 bottom-28 z-50 grid size-10 place-items-center rounded-lg border border-slate/40 bg-paper-deep/80 text-ink-muted opacity-0 transition-opacity duration-200 hover:border-terra hover:text-terra dark:bg-ink-soft/80 dark:text-slate dark:hover:border-gold dark:hover:text-gold;
 }
 
 .scroll-top[data-visible="true"] {
