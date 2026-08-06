@@ -48,12 +48,12 @@ const enHref = unprefixed === '/' ? '/' : unprefixed;
     </script>
   </head>
   <body class="min-h-dvh bg-paper font-sans text-ink antialiased transition-colors dark:bg-ink dark:text-paper">
-    <header class="mx-auto w-full max-w-6xl border-b border-slate/40">
-      <div class="flex items-center justify-between px-6 py-5">
-        <a href={`${localePrefix(locale)}/`} aria-label="Cluyverth Hub, home">
+    <header class="sticky top-0 z-40 w-full bg-paper dark:bg-ink">
+      <div class="mx-auto flex w-full max-w-6xl items-center justify-between border-b border-slate/40 px-6 py-5 nav:grid nav:grid-cols-[1fr_auto_1fr]">
+        <a href={`${localePrefix(locale)}/`} aria-label="Cluyverth Hub, home" class="justify-self-start">
           <span class="logo-mark">CP</span>
         </a>
-        <nav class="hidden items-center gap-6 text-sm md:flex">
+        <nav class="hidden items-center gap-6 text-sm nav:flex">
           {
             nav.map((item) => {
               const active =
@@ -71,6 +71,8 @@ const enHref = unprefixed === '/' ? '/' : unprefixed;
               );
             })
           }
+        </nav>
+        <div class="hidden items-center justify-self-end gap-2 nav:flex">
           <div
             class="flex items-center gap-1 text-sm font-bold"
             role="group"
@@ -102,51 +104,8 @@ const enHref = unprefixed === '/' ? '/' : unprefixed;
               <Lucide icon={Sun} class="theme-icon-sun size-4" />
             </button>
           </div>
-        </nav>
-        <button
-          id="menu-toggle"
-          type="button"
-          aria-label="Open menu"
-          aria-expanded="false"
-          aria-controls="mobile-menu"
-          class="grid size-9 place-items-center rounded-md text-ink transition-colors hover:text-terra md:hidden dark:text-paper dark:hover:text-gold"
-        >
-          <Lucide icon={Menu} class="menu-icon-open size-5" />
-          <Lucide icon={X} class="menu-icon-close hidden size-5" />
-        </button>
-      </div>
-      <nav
-        id="mobile-menu"
-        class="hidden border-t border-slate/40 px-6 py-4 md:hidden"
-        aria-label="Mobile navigation"
-      >
-        <ul class="space-y-1">
-          {
-            nav.map((item) => {
-              const active =
-                item.href === `${localePrefix(locale)}/`
-                  ? pathname === item.href
-                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
-              return (
-                <li>
-                  <a
-                    href={item.href}
-                    aria-current={active ? 'page' : undefined}
-                    class:list={[
-                      'block rounded-md px-3 py-2 text-base font-medium transition-colors',
-                      active
-                        ? 'text-terra dark:text-gold'
-                        : 'text-ink-muted hover:text-terra dark:text-slate dark:hover:text-gold',
-                    ]}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })
-          }
-        </ul>
-        <div class="mt-4 flex items-center justify-between border-t border-slate/40 pt-4">
+        </div>
+        <div class="flex items-center gap-1.5 nav:hidden">
           <div class="flex items-center gap-1 text-sm font-bold" role="group" aria-label="Language">
             <a
               href={ptHref}
@@ -172,14 +131,67 @@ const enHref = unprefixed === '/' ? '/' : unprefixed;
             <Lucide icon={Moon} class="theme-icon-moon size-4" />
             <Lucide icon={Sun} class="theme-icon-sun size-4" />
           </button>
+          <button
+            id="menu-toggle"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            class="grid size-9 place-items-center rounded-md text-ink transition-colors hover:text-terra dark:text-paper dark:hover:text-gold"
+          >
+            <Lucide icon={Menu} class="size-5" />
+          </button>
         </div>
-      </nav>
+      </div>
     </header>
-    <main>
+    <nav
+      id="mobile-menu"
+      class="menu-panel fixed inset-0 z-[60] hidden flex-col overflow-y-auto bg-paper nav:hidden dark:bg-ink"
+      aria-label="Mobile navigation"
+    >
+      <div class="flex items-center justify-between px-6 py-5">
+        <span class="logo-mark">CP</span>
+        <button
+          id="menu-close"
+          type="button"
+          aria-label="Close menu"
+          class="grid size-9 place-items-center rounded-md text-ink transition-colors hover:text-terra dark:text-paper dark:hover:text-gold"
+        >
+          <Lucide icon={X} class="size-5" />
+        </button>
+      </div>
+      <ul class="flex flex-1 flex-col items-center justify-center gap-1 px-6 pb-20">
+        {
+          nav.map((item) => {
+            const active =
+              item.href === `${localePrefix(locale)}/`
+                ? pathname === item.href
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'block rounded-md px-4 py-2.5 text-2xl font-bold transition-colors',
+                    active
+                      ? 'text-terra dark:text-gold'
+                      : 'text-ink-muted hover:text-terra dark:text-slate dark:hover:text-gold',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <main class="pb-32">
       <slot />
     </main>
-    <footer class="mx-auto mt-24 w-full max-w-6xl border-t border-slate/40">
-      <div class="flex items-center justify-between gap-4 px-6 py-8 text-base text-ink-muted dark:text-slate">
+    <footer class="fixed inset-x-0 bottom-0 z-40 bg-paper dark:bg-ink">
+      <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 border-t border-slate/40 px-6 py-8 text-base text-ink-muted dark:text-slate">
         <span>© {year} Cluyverth Pereira</span>
         <div class="flex items-center gap-3">
           <span class="hidden sm:inline">RSS</span>
@@ -213,16 +225,25 @@ const enHref = unprefixed === '/' ? '/' : unprefixed;
       });
     </script>
     <script is:inline>
-      // Mobile menu: the hamburger toggles the panel and swaps the icon.
+      // Mobile menu: the hamburger opens a full-screen overlay; the close
+      // button, Escape and a resize back to desktop all dismiss it.
       const menuToggle = document.getElementById('menu-toggle');
+      const menuClose = document.getElementById('menu-close');
       const mobileMenu = document.getElementById('mobile-menu');
-      if (menuToggle && mobileMenu) {
-        menuToggle.addEventListener('click', () => {
-          const willOpen = mobileMenu.classList.contains('hidden');
-          mobileMenu.classList.toggle('hidden', !willOpen);
-          menuToggle.setAttribute('aria-expanded', String(willOpen));
-          menuToggle.querySelector('.menu-icon-open')?.classList.toggle('hidden', willOpen);
-          menuToggle.querySelector('.menu-icon-close')?.classList.toggle('hidden', !willOpen);
+      if (menuToggle && menuClose && mobileMenu) {
+        const setMenuOpen = (open) => {
+          mobileMenu.classList.toggle('hidden', !open);
+          mobileMenu.classList.toggle('flex', open);
+          menuToggle.setAttribute('aria-expanded', String(open));
+          document.body.style.overflow = open ? 'hidden' : '';
+        };
+        menuToggle.addEventListener('click', () => setMenuOpen(true));
+        menuClose.addEventListener('click', () => setMenuOpen(false));
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setMenuOpen(false);
+        });
+        matchMedia('(min-width: 900px)').addEventListener('change', (event) => {
+          if (event.matches) setMenuOpen(false);
         });
       }
     </script>
