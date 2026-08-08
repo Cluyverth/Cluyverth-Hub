@@ -59,6 +59,8 @@ const dict: Dict = {
     pt: 'Ainda não há projetos. Escreva uma nota com `project: true` e ela aparecerá aqui.',
   },
   'projects.noImage': { en: 'no image', pt: 'sem imagem' },
+  'projects.live': { en: 'Live site', pt: 'Ver ao vivo' },
+  'projects.source': { en: 'Source code', pt: 'Código-fonte' },
   'graph.title': { en: 'Graph', pt: 'Grafo' },
   'graph.intro': {
     en: 'Every public note is a node and every resolved wikilink is an edge. Drag to move, scroll to zoom, click a node to open the note.',

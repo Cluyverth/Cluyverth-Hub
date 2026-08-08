@@ -9,6 +9,8 @@ stack: [Astro, Tailwind CSS, Bun]
 category: Projects
 tags: [astro, web, template, static-site]
 image: /images/oficio-template.webp
+repo: https://github.com/Cluyverth/oficio-template
+live: https://oficio.cluyverth.com
 description: "Template de site estático pronto para entregar a negócios de serviço, com conversão por WhatsApp, galeria de projetos e privacidade em conformidade com a LGPD."
 ---
 
@@ -18,8 +20,6 @@ description: "Template de site estático pronto para entregar a negócios de ser
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Bun](https://img.shields.io/badge/Bun-1.3-F9F1E1?logo=bun&logoColor=white)](https://bun.sh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Cluyverth/oficio-template/blob/main/LICENSE)
-
-**Ao vivo**: [oficio.cluyverth.com](https://oficio.cluyverth.com) · **Código**: [Cluyverth/oficio-template](https://github.com/Cluyverth/oficio-template)
 
 ## O que é
 
