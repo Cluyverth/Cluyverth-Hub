@@ -1,0 +1,13 @@
+# Nixpacks build configuration, used automatically by Coolify to build the site.
+# Docs: https://nixpacks.com/docs/configuration/file
+# With "Is it a static site?" enabled, Coolify serves the build output (dist/)
+# with Nginx. This site is static, so no [start] phase is needed.
+
+[phases.setup]
+nixPkgs = ["bun"]
+
+[phases.install]
+cmds = ["bun install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["bun run build"]
