@@ -58,7 +58,7 @@ Escrevo tudo no Obsidian. O site é a versão filtrada dessa escrita: um vault, 
 | Camada | Escolha | Por quê |
 | --- | --- | --- |
 | Framework | **Astro 7** | HTML estático por padrão; só islands de verdade enviam JavaScript |
-| Markdown | **Motor Sätteri** (motor de markdown do Astro 7) | Wikilinks do Obsidian resolvidos no build, alimentando páginas e grafo igualmente |
+| Markdown | **Motor Sätteri** | Wikilinks do Obsidian resolvidos no build, alimentando páginas e grafo igualmente |
 | Estilo | **Tailwind CSS 4** | A paleta carcará (ink, paper, terra, gold) como tokens CSS, dark mode por classe |
 | Linguagem | **TypeScript strict** | Sem `any`, sem pular tipos; `astro check` trava todo build |
 | Runtime | **Bun** | Instalação e build rápidos, fixado pelo Dockerfile no servidor |
