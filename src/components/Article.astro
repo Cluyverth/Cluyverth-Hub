@@ -150,7 +150,7 @@ const showProjectButtons = project && (repo || live);
                               href={live}
                               target="_blank"
                               rel="noopener"
-                              class="inline-flex items-center gap-2 rounded-sm bg-terra px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-terra/90 dark:bg-gold dark:text-ink dark:hover:bg-gold/90"
+                              class="inline-flex items-center gap-1.5 rounded-full bg-terra px-4 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-terra/90 dark:bg-gold dark:text-ink dark:hover:bg-gold/90"
                             >
                               <Lucide icon={ExternalLink} class="size-4" />
                               {t(locale, 'projects.live')}
@@ -163,7 +163,7 @@ const showProjectButtons = project && (repo || live);
                               href={repo}
                               target="_blank"
                               rel="noopener"
-                              class="inline-flex items-center gap-2 rounded-sm border border-slate/40 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-terra hover:text-terra dark:text-paper dark:hover:border-gold dark:hover:text-gold"
+                              class="inline-flex items-center gap-1.5 rounded-full border border-slate/40 px-4 py-1.5 text-sm font-semibold text-ink-muted transition-colors hover:border-terra hover:text-terra dark:text-slate dark:hover:border-gold dark:hover:text-gold"
                             >
                               <Lucide icon={githubMark} class="size-4" />
                               {t(locale, 'projects.source')}

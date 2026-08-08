@@ -197,6 +197,20 @@ html {
   scroll-margin-top: 7rem;
 }
 
+/* Badge rows in notes (shields.io images): Tailwind v4 preflight makes every
+   img block, which stacks badges vertically. Keep them inline in a flex row. */
+.note-prose .badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 1rem;
+}
+
+.note-prose .badges img {
+  display: inline-block;
+  margin: 0;
+}
+
 /* Obsidian-style unresolved wikilink: dimmed, never a dead link */
 .unresolved {
   @apply italic text-ink-muted/70 dark:text-slate/70;

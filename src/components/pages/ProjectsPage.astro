@@ -29,80 +29,73 @@ const prefix = locale === 'en' ? '' : '/pt';
           {t(locale, 'projects.empty')}
         </p>
       ) : (
-        <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <ul class="mt-10">
           {
-            projects.map((entry, index) => {
+            projects.map((entry) => {
               const slug = noteSlug(entry);
               const { title, description, stack, image, repo, live } = entry.data;
               return (
-                <li class={index === 0 ? 'md:col-span-2' : undefined}>
-                  <a
-                    href={`${prefix}/projects/${slug}`}
-                    class="group relative block h-64 overflow-hidden rounded-sm border border-slate/40"
-                  >
-                    {
-                      image ? (
-                        <img
-                          src={image}
-                          alt=""
-                          loading="lazy"
-                          class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      ) : (
-                        <span class="absolute inset-0 grid place-items-center bg-paper-deep text-ink-muted dark:bg-ink-soft dark:text-slate">
-                          {t(locale, 'projects.noImage')}
-                        </span>
-                      )
-                    }
-                    <span class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-transparent"></span>
-                    <span class="absolute inset-x-0 bottom-0 p-5">
-                      <h2 class="font-serif text-2xl font-bold text-paper">{title}</h2>
+                <li class="border-b border-slate/40">
+                  <div class="group relative block pt-6 pb-8 sm:min-h-[230px] sm:pb-0">
+                    <span class="relative z-10 block sm:w-[min(64%,720px)]">
+                      <a href={`${prefix}/projects/${slug}`}>
+                        <h2 class="font-serif text-2xl font-bold tracking-tight text-ink transition-colors group-hover:text-terra dark:text-paper dark:group-hover:text-gold">
+                          {title}
+                        </h2>
+                      </a>
                       {
                         stack.length > 0 && (
-                          <p class="mt-1.5 flex flex-wrap gap-x-2 text-sm font-semibold text-terra dark:text-gold">
+                          <p class="mt-2 flex flex-wrap gap-x-2 text-sm font-semibold text-terra dark:text-gold">
                             {stack.map((tech) => <span>{tech}</span>)}
                           </p>
                         )
                       }
                       {description && (
-                        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-paper/80">
+                        <p class="mt-2 max-w-3xl text-base leading-relaxed text-ink-muted dark:text-slate">
                           {description}
                         </p>
                       )}
+                      {
+                        (repo || live) && (
+                          <div class="mt-5 flex flex-wrap gap-2">
+                            {
+                              live && (
+                                <a
+                                  href={live}
+                                  target="_blank"
+                                  rel="noopener"
+                                  class="inline-flex items-center gap-1.5 rounded-full bg-terra px-4 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-terra/90 dark:bg-gold dark:text-ink dark:hover:bg-gold/90"
+                                >
+                                  <Lucide icon={ExternalLink} class="size-3.5" />
+                                  {t(locale, 'projects.live')}
+                                </a>
+                              )
+                            }
+                            {
+                              repo && (
+                                <a
+                                  href={repo}
+                                  target="_blank"
+                                  rel="noopener"
+                                  class="inline-flex items-center gap-1.5 rounded-full border border-slate/40 px-4 py-1.5 text-sm font-semibold text-ink-muted transition-colors hover:border-terra hover:text-terra dark:text-slate dark:hover:border-gold dark:hover:text-gold"
+                                >
+                                  <Lucide icon={githubMark} class="size-3.5" />
+                                  {t(locale, 'projects.source')}
+                                </a>
+                              )
+                            }
+                          </div>
+                        )
+                      }
                     </span>
-                  </a>
-                  {
-                    (repo || live) && (
-                      <div class="mt-2 flex flex-wrap gap-2">
-                        {
-                          live && (
-                            <a
-                              href={live}
-                              target="_blank"
-                              rel="noopener"
-                              class="inline-flex items-center gap-1.5 rounded-sm bg-terra px-3 py-1.5 text-xs font-semibold text-paper transition-colors hover:bg-terra/90 dark:bg-gold dark:text-ink dark:hover:bg-gold/90"
-                            >
-                              <Lucide icon={ExternalLink} class="size-3.5" />
-                              {t(locale, 'projects.live')}
-                            </a>
-                          )
-                        }
-                        {
-                          repo && (
-                            <a
-                              href={repo}
-                              target="_blank"
-                              rel="noopener"
-                              class="inline-flex items-center gap-1.5 rounded-sm border border-slate/40 px-3 py-1.5 text-xs font-semibold text-ink transition-colors hover:border-terra hover:text-terra dark:text-paper dark:hover:border-gold dark:hover:text-gold"
-                            >
-                              <Lucide icon={githubMark} class="size-3.5" />
-                              {t(locale, 'projects.source')}
-                            </a>
-                          )
-                        }
-                      </div>
-                    )
-                  }
+                    {
+                      image && (
+                        <div class="cover-wash absolute bottom-0 right-0 top-6 z-0 hidden sm:block">
+                          <img src={image} alt="" loading="lazy" class="h-full w-full object-cover" />
+                        </div>
+                      )
+                    }
+                  </div>
                 </li>
               );
             })
