@@ -58,7 +58,7 @@ I write everything in Obsidian. The site is the filtered version of that writing
 | Layer | Choice | Why |
 | --- | --- | --- |
 | Framework | **Astro 7** | Static HTML by default; only true islands ship JavaScript |
-| Markdown | **Sätteri engine** | Obsidian wikilinks resolved at build time, feeding pages and graph alike |
+| Markdown | **Sätteri engine** (Astro 7's markdown engine) | Obsidian wikilinks resolved at build time, feeding pages and graph alike |
 | Styling | **Tailwind CSS 4** | The carcará palette (ink, paper, terra, gold) as CSS tokens, class-based dark mode |
 | Language | **TypeScript strict** | No `any`, no type-skipping; `astro check` gates every build |
 | Runtime | **Bun** | Fast install and build, pinned by the Dockerfile on the server |

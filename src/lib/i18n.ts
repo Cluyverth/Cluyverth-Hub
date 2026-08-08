@@ -59,7 +59,7 @@ const dict: Dict = {
     pt: 'Ainda não há projetos. Escreva uma nota com `project: true` e ela aparecerá aqui.',
   },
   'projects.noImage': { en: 'no image', pt: 'sem imagem' },
-  'projects.live': { en: 'Live site', pt: 'Ver ao vivo' },
+  'projects.live': { en: 'Open site', pt: 'Abrir site' },
   'projects.source': { en: 'Source code', pt: 'Código-fonte' },
   'graph.title': { en: 'Graph', pt: 'Grafo' },
   'graph.intro': {
