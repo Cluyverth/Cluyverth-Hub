@@ -1,40 +1,51 @@
 # Cluyverth Hub
 
-The source of [cluyverth.com](https://cluyverth.com). A static site that publishes a public slice of an Obsidian vault, with no backend, no accounts and no database. This repo is public, it contains the site code and the public notes, and private notes never enter it.
+**The source of [cluyverth.com](https://cluyverth.com).** A static site that publishes a public slice of an Obsidian vault, with no backend, no accounts and no database. The repo is public, it contains the site code and the public notes, and private notes never enter it.
 
-## What this project is
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Bun](https://img.shields.io/badge/Bun-1.3-F9F1E1?logo=bun&logoColor=white)](https://bun.sh)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-I write everything in Obsidian. The site is the filtered version of my writing: a vault, a graph, a few guides, a projects page and a links page. The whole pipeline runs at build time, and the result is plain static HTML served from a VPS.
+## What it is
 
-## The decisions and why they were good
+I write everything in Obsidian. The site is the filtered version of that writing: a vault, a graph, guides, a projects page and a links page. Publishing is a single action: write the note, commit it, push to `main`, and Coolify rebuilds the site. The whole pipeline runs at build time and the result is plain static HTML served from a VPS.
 
-### A static site, with no backend
+- **For the reader:** fast pages, a searchable vault with notebook filters, a force graph, RSS feeds and a PT | EN toggle.
+- **For me:** writing stays in Obsidian, publishing is a git push, privacy is enforced at the source, and the build fails on a broken shape instead of shipping a broken page.
 
-The content is markdown, read-only, and written by one person. A server would add cost, attack surface, maintenance and scaling worries, with nothing in return. Static HTML serves instantly, costs almost nothing on a VPS, and has nothing to hack because there is no code running.
+The tracker keeps the three-level structure small: features, product backlog items (PBIs) and tasks. One branch per feature, one PR per feature, squash merged to `main`. See [AGENTS.md](AGENTS.md) for the full working agreements.
 
-Astro is the engine. Every page renders to plain HTML by default, and only the components that truly need the browser ship JavaScript, as islands: the force graph, the vault search and filters, the table of contents scrollspy and the Mermaid diagrams. Reading pages are pure HTML and CSS, so they load fast and work without JavaScript.
+## Screenshots
 
-### One public repo, with the notes committed
+| Home | Vault |
+| --- | --- |
+| ![Home](docs/screenshot-home.webp) | ![Vault](docs/screenshot-vault.webp) |
 
-There is exactly one repo, this one. It is public, it contains the site code and the public notes, and the build needs nothing else: no second repo to sync, no tokens, no build-time cloning, no secrets to rotate.
+## What the site delivers
 
-This is a good decision because publishing stays a single action. Write the note in Obsidian, commit, push to `main`, and Coolify rebuilds the site. Privacy is enforced at the source: the vault has its own `.gitignore` that keeps private folders and files out of git entirely, so a private note is never committed to this repo. And because the repo is public, anyone can audit exactly what is public, because the whole thing is public.
+- **A public slice of the vault**: notes render only with `status: public`; drafts render in local dev, private notes never render. The gate is defense in depth: even if a non-public note reached the repo, the build filters it before it can reach the internet.
+- **A projects page**: notes with `project: true` become project cards with cover image, stack and description, like the Cluyverth Hub project note itself.
+- **A force graph**: wikilink edges computed at build time from the same resolution that renders the pages, so pages and graph can never disagree.
+- **Instant vault search**: client-side search with notebook filter pills.
+- **A typed links page**: links live in one typed TypeScript file, so the build fails if the shape breaks.
+- **RSS feeds**: English and Portuguese feeds generated at build time.
+- **Full internationalization**: mirrored notes in `en-us/` and `pt-br/`, PT notes resolve PT wikilinks, and the PT | EN toggle switches the whole site.
+- **Islands only where needed**: the graph, search, table of contents scrollspy and Mermaid diagrams hydrate in the browser; reading pages are pure HTML and CSS, so they load instantly and work without JavaScript.
+- **Zero external requests**: self-hosted Inter variable font, no third-party fonts, no tracking.
 
-### The status gate, as defense in depth
+## Stack
 
-Every note carries a `status` field. Only `status: public` renders anywhere. Drafts render in local dev only, and private notes never render at all. The gate is the second layer: even if a non-public note somehow reached the repo, the build filters it before it can reach the internet. Two independent mechanisms, so one failure cannot leak anything.
-
-### A distinctive, content-first design
-
-The carcará palette (ink, paper, terra and gold) comes from the Brazilian cerrado bird that names the brand. Self-hosted Inter covers the whole site, so there are zero external font requests and no third-party tracking. The content is the star, and the design is unmistakably personal.
-
-### Typed data for the links page
-
-Links live in one typed TypeScript file. Adding a link is editing a data file, and the build fails if the shape breaks. No database, no CMS, no admin panel.
-
-### A GitHub flow that scales down to one person
-
-Issues are organized in two levels that keep the structure of three: features and product backlog items (PBIs). A feature is the stakeholder vision, a PBI is a user story with acceptance criteria, and its tasks are a checklist inside the PBI. Each feature gets one branch, and one PR per feature keeps reviews coherent. Squash merging to `main` keeps history linear, and conventional commits keep it readable. See [AGENTS.md](AGENTS.md) for the full working agreements.
+| Layer | Choice | Why |
+| --- | --- | --- |
+| Framework | **Astro 7** | Static HTML by default; only true islands ship JavaScript |
+| Markdown | **Sätteri engine** | Obsidian wikilinks resolved at build time, feeding pages and graph alike |
+| Styling | **Tailwind CSS 4** | The carcará palette (ink, paper, terra, gold) as CSS tokens, class-based dark mode |
+| Language | **TypeScript strict** | No `any`, no type-skipping; `astro check` gates every build |
+| Runtime | **Bun** | Fast install and build, pinned by `nixpacks.toml` on the server |
+| Fonts | **Inter variable** | Self-hosted via @fontsource, zero external font requests |
+| Content | **Typed frontmatter** | A Zod schema validates every note at build time |
 
 ## How a note reaches the site
 
@@ -48,30 +59,44 @@ flowchart TB
 
 1. Notes are written in Obsidian. Public notes are committed to this repo under `.notes/` (`en-us` and `pt-br` folders). Private notes never leave the vault, the vault `.gitignore` keeps them out of git.
 2. Pushing to `main` triggers the Coolify build.
-3. The build reads every note in `.notes/` and renders only `status: public` ones.
+3. The build reads every note and renders only `status: public` ones.
 4. The output is static HTML deployed by Coolify to the VPS.
 
-## Local development
+## How to run
 
 Requires [Bun](https://bun.sh).
 
 ```bash
 bun install
-bun run dev
+bun run dev        # development server with hot reload
+bun run build      # astro check, then the static build into dist/
+bun run preview    # serve the build locally
 ```
 
 The notes are already in the repo under `.notes/`, so no setup is needed.
 
-## Building and deploying with Coolify
+## Structure
 
-Everything the build needs is in this public repo: `package.json`, `bun.lock`, the Astro config, the content schema, the notes and the static assets. On the VPS, Coolify only needs configuration:
+```
+├── src/                       ← site code: pages, components, layouts, libs
+│   ├── pages/                 ← home, vault, projects, links, graph, about, 404
+│   ├── components/            ← UI pieces and islands (graph, search, TOC)
+│   ├── lib/                   ← notes, wikilinks, graph data, i18n
+│   └── content.config.ts      ← note schema (Zod)
+├── .notes/                    ← the public notes (en-us/ and pt-br/)
+│   └── .gitignore             ← keeps private/ out of git
+├── nixpacks.toml              ← pins the build for Coolify
+├── astro.config.mjs
+└── package.json
+```
 
-- **Build pack**: Nixpacks (it detects Bun from `bun.lock`).
-- **Build command**: `bun run build`
-  - This runs `astro check` for type safety, then `astro build` for the static output.
-- **Output directory**: `dist`
+## Deploy
 
-No environment variables and no secrets are required. Pushing to `main` triggers the build and deploy. There is no runtime server, so nothing listens on a port after the build finishes.
+### Coolify (own VPS)
+
+The repo includes a [`nixpacks.toml`](nixpacks.toml) that pins the build, the same approach as the [Oficio template](https://github.com/Cluyverth/oficio-template). On Coolify: **Create New Resource → Public Repository** → Build Pack **Nixpacks** → check **Is it a static site?** → **Publish Directory** `/dist`. Nixpacks installs with `bun install --frozen-lockfile` and builds with `bun run build`, which runs `astro check` for type safety before `astro build`. Pushing to `main` triggers the build and deploy.
+
+No environment variables and no secrets are required. There is no runtime server, so nothing listens on a port after the build finishes.
 
 ## Privacy guarantees
 
