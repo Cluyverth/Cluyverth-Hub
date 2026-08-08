@@ -37,6 +37,8 @@ Frontmatter é um bloco YAML no topo do arquivo, entre linhas `---`. Ele decide 
 - `description`: uma linha exibida nos cards
 - `project: true`: renderiza a nota na página de projetos
 - `stack`: lista de tecnologias para projetos
+- `repo`: a URL do repositório do projeto, renderiza um botão de código-fonte nas páginas de projeto
+- `live`: a URL do site ao vivo do projeto, renderiza um botão de acesso nas páginas de projeto
 - `image`: uma URL de capa para cards e grafo
 - `lang`: `en` ou `pt`, para versões traduzidas
 - `translation`: o slug da nota na outra língua
