@@ -37,6 +37,8 @@ Frontmatter is a YAML block at the top of the file, between `---` lines. It deci
 - `description`: one line shown on cards
 - `project: true`: renders the note on the projects page
 - `stack`: tech list for projects
+- `repo`: the project repository URL, renders a source button on project pages
+- `live`: the project live site URL, renders a live button on project pages
 - `image`: a cover URL for cards and the graph
 - `lang`: `en` or `pt`, marks the note language
 - `translation`: the slug of the note in the other language

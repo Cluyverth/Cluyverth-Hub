@@ -25,6 +25,10 @@ const notes = defineCollection({
     project: z.boolean().default(false),
     /** Project tech stack, shown as the project's tags. */
     stack: z.array(z.string()).default([]),
+    /** Project repository URL (renders a source button on project pages). */
+    repo: z.string().url().optional(),
+    /** Project live site URL (renders a live button on project pages). */
+    live: z.string().url().optional(),
     /** Project cover image URL (optional). */
     image: z.string().optional(),
     description: z.string().optional(),

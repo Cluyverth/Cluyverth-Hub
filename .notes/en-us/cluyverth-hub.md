@@ -1,6 +1,6 @@
 ---
 title: Cluyverth Hub
-date: 2026-08-05
+date: 2026-08-08
 author: Cluyverth Pereira
 status: public
 lang: en
@@ -11,71 +11,120 @@ category: Projects
 notebook: Cluyverth Hub
 tags: [astro, web, static-site, ci-cd]
 image: /images/cluyverth-hub.png
-description: "The site itself. How it is built, deployed and kept private, and why."
+repo: https://github.com/Cluyverth/Cluyverth-Hub
+live: https://cluyverth.com
+description: "The site you are reading: a static, backend-free home for my writing, built from a public slice of my Obsidian vault."
 ---
 
-Cluyverth Hub is the project behind this site. It is a static website that publishes a public slice of my Obsidian vault, with no backend, no accounts and no database.
+**The source of [cluyverth.com](https://cluyverth.com).** A static site that publishes a public slice of an Obsidian vault, with no backend, no accounts and no database.
 
-## Concept
+<div class="badges">
 
-I write everything in Obsidian. The site is the filtered version of that writing, a vault, a graph, a few guides, a projects page and a links page. Publishing should be as simple as writing, so the whole pipeline runs at build time and the result is plain static HTML served from the VPS.
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Bun](https://img.shields.io/badge/Bun-1.3-F9F1E1?logo=bun&logoColor=white)](https://bun.sh)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Cluyverth/Cluyverth-Hub/blob/main/LICENSE)
 
-## Why a static site
+</div>
 
-The content is markdown and read-only, so a server would add cost, attack surface and maintenance with nothing in return. Static HTML serves instantly, costs almost nothing, and has nothing to hack because no code is running. This is the good decision behind the whole project, and everything else follows from it.
+## What it is
 
-## Why everything is in one public repo
+I write everything in Obsidian. The site is the filtered version of that writing: a vault, a graph, guides, a projects page and a links page. Publishing is a single action: write the note, commit it, push to `main`, and Coolify rebuilds the site. The whole pipeline runs at build time and the result is plain static HTML served from a VPS.
 
-This repo is public and it holds both the site code and the public notes. Writing a note, committing it and pushing to main is the whole publishing flow. There is no second repo to sync, no token to protect and no build-time cloning, so there is nothing to misconfigure and no secret that could leak.
+- **For the reader:** fast pages, a searchable vault with notebook filters, a force graph, RSS feeds and a PT | EN toggle.
+- **For me:** writing stays in Obsidian, publishing is a git push, privacy is enforced at the source, and the build fails on a broken shape instead of shipping a broken page.
 
-Privacy moves to the source: the `private/` folder inside `.notes/` is ignored by the `.gitignore`, so anything placed there is never committed. And because the repo is public, anyone can audit exactly what is public, because the whole thing is public.
+## Screenshots
 
-## The publishing pipeline
+| Home | Vault |
+| --- | --- |
+| ![Home](/images/screenshot-home.webp) | ![Vault](/images/screenshot-vault.webp) |
+
+## What the site delivers
+
+- **A public slice of the vault** — notes render only with `status: public`; drafts render in local dev, private notes never render. The gate is defense in depth: even if a non-public note reached the repo, the build filters it before it can reach the internet.
+- **A projects page** — notes with `project: true` become project cards with cover image, stack and description.
+- **A force graph** — wikilink edges computed at build time from the same resolution that renders the pages, so pages and graph can never disagree.
+- **Instant vault search** — client-side search with notebook filter pills.
+- **A typed links page** — links live in one typed TypeScript file, so the build fails if the shape breaks.
+- **RSS feeds** — English and Portuguese feeds generated at build time.
+- **Full internationalization** — mirrored notes in `en-us/` and `pt-br/`, PT notes resolve PT wikilinks, and the PT | EN toggle switches the whole site.
+- **Islands only where needed** — the graph, search, table of contents scrollspy and Mermaid diagrams hydrate in the browser; reading pages are pure HTML and CSS, so they load instantly and work without JavaScript.
+- **Zero external requests** — self-hosted Inter variable font, no third-party fonts, no tracking.
+
+## Stack
+
+| Layer | Choice | Why |
+| --- | --- | --- |
+| Framework | **Astro 7** | Static HTML by default; only true islands ship JavaScript |
+| Markdown | **Sätteri engine** | Obsidian wikilinks resolved at build time, feeding pages and graph alike |
+| Styling | **Tailwind CSS 4** | The carcará palette (ink, paper, terra, gold) as CSS tokens, class-based dark mode |
+| Language | **TypeScript strict** | No `any`, no type-skipping; `astro check` gates every build |
+| Runtime | **Bun** | Fast install and build, pinned by the Dockerfile on the server |
+| Fonts | **Inter variable** | Self-hosted via @fontsource, zero external font requests |
+| Content | **Typed frontmatter** | A Zod schema validates every note at build time |
+
+## How a note reaches the site
 
 ```mermaid
 flowchart TB
     V[Obsidian vault] -->|public notes committed, private notes never leave the vault| S[(This public repo)]
     S -->|push to main| B[Coolify build on the VPS]
-    B -->|status: public gate| D[static HTML]
+    B -->|status: public gate| D[Static HTML]
     D -->|deployed| W[cluyverth.com]
 ```
 
-1. Notes are written in Obsidian. Public notes are committed to this repo under `.notes/`, in the `en-us` and `pt-br` folders. Anything private goes into the `private/` folder, which the `.gitignore` keeps out of git.
+1. Notes are written in Obsidian. Public notes are committed to this repo under `.notes/` (`en-us` and `pt-br` folders). Private notes never leave the vault, the vault `.gitignore` keeps them out of git.
 2. Pushing to `main` triggers the Coolify build.
-3. The build reads every note and renders only `status: public` ones. Drafts render in dev only, private notes never render.
+3. The build reads every note and renders only `status: public` ones.
 4. The output is static HTML deployed by Coolify to the VPS.
 
-## Why the status gate
+## How to run
 
-The `status` field is the second layer of privacy. If a non-public note somehow reached the repo, the gate still filters it before it can reach the internet. Two independent mechanisms mean one failure cannot leak anything. Publishing is then just changing `draft` to `public` and pushing.
+Requires [Bun](https://bun.sh).
 
-## CI/CD
+```sh
+bun install
+bun run dev        # development server with hot reload
+bun run build      # astro check, then the static build into dist/
+bun run preview    # serve the build locally
+```
 
-Pushing to `main` triggers Coolify: `astro check` for types, then `astro build` for the static output, then deploy. There is no runtime server.
+The notes are already in the repo under `.notes/`, so no setup is needed.
 
-Note-only updates are commits to this repo, so they trigger the same build as code changes, automatically.
+## Structure
 
-## Astro islands and hydration
+```
+├── src/                       ← site code: pages, components, layouts, libs
+│   ├── pages/                 ← home, vault, projects, links, graph, about, 404
+│   ├── components/            ← UI pieces and islands (graph, search, TOC)
+│   ├── lib/                   ← notes, wikilinks, graph data, i18n
+│   └── content.config.ts      ← note schema (Zod)
+├── .notes/                    ← the public notes (en-us/ and pt-br/)
+│   └── .gitignore             ← keeps private/ out of git
+├── Dockerfile                 ← pins the Bun version for the Coolify build
+├── astro.config.mjs
+└── package.json
+```
 
-Astro renders pages to static HTML by default, zero JavaScript unless a component needs it. An **island** is an interactive component that gets hydrated in the browser while everything around it stays static. This is the "hydrate when needed" rule, and it is why the site stays fast without giving up interactivity.
+## Deploy
 
-What is hydrated on this site and why:
+### Coolify (own VPS)
 
-- **The graph**: a force-directed layout needs continuous client side computation, it cannot be pre-rendered.
-- **Table of contents scrollspy**: tracks scroll position, which only exists in the browser.
-- **Vault search and notebook filters**: instant client side filtering.
-- **Mermaid diagrams**: rendered in the browser when a note contains one.
-- **Theme toggle and back to top**: small inline scripts, no framework.
+The repo includes a multi-stage [`Dockerfile`](https://github.com/Cluyverth/Cluyverth-Hub/blob/main/Dockerfile) that pins the exact Bun version of the lockfile (1.3.14), builds the site and serves it with Nginx. On Coolify: **Create New Resource → Public Repository** → Build Pack **Dockerfile** → set the domain and deploy. The site rebuilds on every push, with no environment variables and no secrets.
 
-What is NOT hydrated: note pages, the vault list, projects, about, links. They are pure HTML and CSS, so they load instantly and work without JavaScript.
+## Privacy guarantees
 
-## The frontmatter contract
+- The `.notes/.gitignore` ignores the `private/` folder, so anything private placed there is never committed to this repo, structurally.
+- The `status` gate filters everything at build time, as a second layer.
+- The repo is public, so everything in it is public by construction, and auditable.
 
-Every note carries the same frontmatter: `title`, `date`, `status` (public, draft, private), `lang` (en, pt), `translation` (the counterpart note), and optionally `slug`, `author`, `tags`, `category`, `notebook`, `description`, `project`, `stack`, `image`. The [[how-to-write-notes]] guide explains every field.
+A private note has no path from the vault to the internet.
 
-## Internationalization
+## License
 
-Notes live in `en-us/` and `pt-br/` folders with mirrored filenames. English is the default at `/`, Portuguese lives under `/pt`. The PT | EN toggle switches the whole site, and each note has a translated mirror paired through the `translation` field. The Portuguese texts are written in Brazilian Portuguese, not machine-translated.
+[MIT](https://github.com/Cluyverth/Cluyverth-Hub/blob/main/LICENSE) © 2026 Cluyverth Pereira
 
 ## Reading guides
 
