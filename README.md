@@ -43,7 +43,7 @@ The tracker keeps the three-level structure small: features, product backlog ite
 | Markdown | **Sätteri engine** | Obsidian wikilinks resolved at build time, feeding pages and graph alike |
 | Styling | **Tailwind CSS 4** | The carcará palette (ink, paper, terra, gold) as CSS tokens, class-based dark mode |
 | Language | **TypeScript strict** | No `any`, no type-skipping; `astro check` gates every build |
-| Runtime | **Bun** | Fast install and build, pinned by `nixpacks.toml` on the server |
+| Runtime | **Bun** | Fast install and build, pinned by the Dockerfile on the server |
 | Fonts | **Inter variable** | Self-hosted via @fontsource, zero external font requests |
 | Content | **Typed frontmatter** | A Zod schema validates every note at build time |
 
@@ -85,7 +85,7 @@ The notes are already in the repo under `.notes/`, so no setup is needed.
 │   └── content.config.ts      ← note schema (Zod)
 ├── .notes/                    ← the public notes (en-us/ and pt-br/)
 │   └── .gitignore             ← keeps private/ out of git
-├── nixpacks.toml              ← pins the build for Coolify
+├── Dockerfile                 ← pins the Bun version for the Coolify build
 ├── astro.config.mjs
 └── package.json
 ```
@@ -94,7 +94,13 @@ The notes are already in the repo under `.notes/`, so no setup is needed.
 
 ### Coolify (own VPS)
 
-The repo includes a [`nixpacks.toml`](nixpacks.toml) that pins the build, the same approach as the [Oficio template](https://github.com/Cluyverth/oficio-template). On Coolify: **Create New Resource → Public Repository** → Build Pack **Nixpacks** → check **Is it a static site?** → **Publish Directory** `/dist`. Nixpacks installs with `bun install --frozen-lockfile` and builds with `bun run build`, which runs `astro check` for type safety before `astro build`. Pushing to `main` triggers the build and deploy.
+The repo includes a multi-stage [`Dockerfile`](Dockerfile) that pins the exact Bun version of the lockfile (1.3.14), builds the site and serves it with Nginx. On Coolify:
+
+1. **Create New Resource → Public Repository** → paste the repository URL.
+2. Build Pack: **Dockerfile**.
+3. Set the domain and click **Deploy**.
+
+The Dockerfile is detected automatically and the site rebuilds on every push. The build runs `bun install --frozen-lockfile` and `bun run build`, which runs `astro check` for type safety before `astro build`.
 
 No environment variables and no secrets are required. There is no runtime server, so nothing listens on a port after the build finishes.
 
