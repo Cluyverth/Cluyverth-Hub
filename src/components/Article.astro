@@ -20,6 +20,7 @@ const { entry, locale, backHref, backLabel } = Astro.props;
 const { Content, headings } = await render(entry);
 const { title, stack, project, repo, live } = entry.data;
 const backlinks = getBacklinks(noteSlug(entry), locale);
+const showProjectButtons = project && (repo || live);
 ---
 
 <article class="mx-auto max-w-6xl px-6 pt-10 pb-16">
@@ -80,10 +81,10 @@ const backlinks = getBacklinks(noteSlug(entry), locale);
     </div>
 
     {
-      (headings.length >= 1 || backlinks.length > 0) && (
+      (headings.length >= 1 || backlinks.length > 0 || showProjectButtons) && (
         <aside class="hidden lg:block">
           {
-            (headings.length >= 1 || backlinks.length > 0) && (
+            (headings.length >= 1 || backlinks.length > 0 || showProjectButtons) && (
               <div class="sticky top-28 max-h-[calc(100dvh_-_9rem)] overflow-y-auto">
                 {
                   headings.length >= 1 && (
@@ -133,6 +134,43 @@ const backlinks = getBacklinks(noteSlug(entry), locale);
                           ))
                         }
                       </ul>
+                    </section>
+                  )
+                }
+                {
+                  showProjectButtons && (
+                    <section
+                      class={backlinks.length > 0 || headings.length >= 1 ? 'mt-10' : undefined}
+                      aria-label="Project links"
+                    >
+                      <div class="flex flex-col gap-2">
+                        {
+                          live && (
+                            <a
+                              href={live}
+                              target="_blank"
+                              rel="noopener"
+                              class="inline-flex items-center gap-2 rounded-sm bg-terra px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-terra/90 dark:bg-gold dark:text-ink dark:hover:bg-gold/90"
+                            >
+                              <Lucide icon={ExternalLink} class="size-4" />
+                              {t(locale, 'projects.live')}
+                            </a>
+                          )
+                        }
+                        {
+                          repo && (
+                            <a
+                              href={repo}
+                              target="_blank"
+                              rel="noopener"
+                              class="inline-flex items-center gap-2 rounded-sm border border-slate/40 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-terra hover:text-terra dark:text-paper dark:hover:border-gold dark:hover:text-gold"
+                            >
+                              <Lucide icon={githubMark} class="size-4" />
+                              {t(locale, 'projects.source')}
+                            </a>
+                          )
+                        }
+                      </div>
                     </section>
                   )
                 }

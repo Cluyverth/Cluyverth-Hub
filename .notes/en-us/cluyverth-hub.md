@@ -11,6 +11,8 @@ category: Projects
 notebook: Cluyverth Hub
 tags: [astro, web, static-site, ci-cd]
 image: /images/cluyverth-hub.png
+repo: https://github.com/Cluyverth/Cluyverth-Hub
+live: https://cluyverth.com
 description: "The site itself. How it is built, deployed and kept private, and why."
 ---
 
