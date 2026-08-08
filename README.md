@@ -15,7 +15,7 @@ I write everything in Obsidian. The site is the filtered version of that writing
 - **For the reader:** fast pages, a searchable vault with notebook filters, a force graph, RSS feeds and a PT | EN toggle.
 - **For me:** writing stays in Obsidian, publishing is a git push, privacy is enforced at the source, and the build fails on a broken shape instead of shipping a broken page.
 
-The tracker keeps the three-level structure small: features, product backlog items (PBIs) and tasks. One branch per feature, one PR per feature, squash merged to `main`. See [AGENTS.md](AGENTS.md) for the full working agreements.
+The tracker keeps the three-level structure small: features, product backlog items (PBIs) and tasks. One branch per feature, one PR per feature, squash merged to `main`.
 
 ## Screenshots
 
