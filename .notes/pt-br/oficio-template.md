@@ -16,10 +16,14 @@ description: "Template de site estático pronto para entregar a negócios de ser
 
 **Um site profissional para quem vive do próprio trabalho.** Template completo de site para prestadores de serviço: marcenarias, encanadores, eletricistas, reformas e qualquer negócio que venda serviço. Feito para ser entregue a clientes reais, com conteúdo editável em Markdown e dados centralizados em um único arquivo.
 
+<div class="badges">
+
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Bun](https://img.shields.io/badge/Bun-1.3-F9F1E1?logo=bun&logoColor=white)](https://bun.sh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Cluyverth/oficio-template/blob/main/LICENSE)
+
+</div>
 
 ## O que é
 
@@ -27,6 +31,12 @@ Um produto de site estático construído para resolver um problema real: pequeno
 
 - **Para o cliente:** um site rápido, bonito e focado em conversão, com botão de WhatsApp em todo lugar, avaliações do Google e galeria de projetos.
 - **Para o dev:** um codebase limpo, documentado e 100% estático, sem banco, sem backend, quase sem JavaScript no navegador. Deploy em qualquer lugar.
+
+## Screenshots
+
+| Home | Página de projetos |
+| --- | --- |
+| ![Home](/images/oficio-screenshot-home.webp) | ![Projetos](/images/oficio-screenshot-projetos.webp) |
 
 ## O que o site entrega
 

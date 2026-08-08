@@ -16,10 +16,14 @@ description: "A ready-to-deliver static site template for service businesses, wi
 
 **A professional website for people who live off their own work.** A complete site template for service providers: cabinetmakers, plumbers, electricians, renovations, any business that sells service. Built to be handed to real clients, with content editable in Markdown and data centralized in a single file.
 
+<div class="badges">
+
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Bun](https://img.shields.io/badge/Bun-1.3-F9F1E1?logo=bun&logoColor=white)](https://bun.sh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Cluyverth/oficio-template/blob/main/LICENSE)
+
+</div>
 
 ## What it is
 
@@ -27,6 +31,12 @@ A static site product built to solve a real problem: small service businesses ne
 
 - **For the client:** a fast, beautiful site focused on conversion, with a WhatsApp button everywhere, Google reviews and a project gallery.
 - **For the developer:** a clean, documented, 100% static codebase, no database, no backend, almost no JavaScript in the browser. Deploy anywhere.
+
+## Screenshots
+
+| Home | Projects |
+| --- | --- |
+| ![Home](/images/oficio-screenshot-home.webp) | ![Projects](/images/oficio-screenshot-projetos.webp) |
 
 ## What the site delivers
 
