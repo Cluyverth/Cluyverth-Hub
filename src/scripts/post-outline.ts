@@ -1,48 +1,102 @@
-const outline = document.querySelector('.post-outline');
-const headings = Array.from(outline?.querySelectorAll<HTMLAnchorElement>('a[href^="#"]') ?? []).flatMap((link) => {
-  const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
-  return heading ? [{ link, heading }] : [];
-});
+import { createOutlineReading } from './outline-reading.ts';
 
-if (headings.length) {
-  const header = document.querySelector<HTMLElement>('.site-head')!;
-  const footer = document.querySelector<HTMLElement>('.site-foot')!;
+const linkSelector = 'a[href^="#"]';
+
+// TypeScript's DOM declarations do not yet include the navigate event.
+type OutlineNavigateEvent = Event & {
+  readonly destination: { readonly sameDocument: boolean; readonly url: string };
+  readonly hashChange: boolean;
+  readonly navigationType: NavigationType;
+};
+
+function bindOutline(outline: HTMLElement, header: HTMLElement): void {
+  const entries: { link: HTMLAnchorElement; heading: HTMLElement }[] = [];
+  outline.querySelectorAll<HTMLAnchorElement>(linkSelector).forEach((link) => {
+    const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+    if (heading) entries.push({ link, heading });
+  });
+  if (!entries.length) return;
+
+  const reading = createOutlineReading(entries.length, (index) => entries[index].heading.getBoundingClientRect().top);
   let active: HTMLAnchorElement | undefined;
   let frame = 0;
+  const timing = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+  let initialFragmentPending = Boolean(location.hash) && timing?.type !== 'back_forward';
+  let pendingHash: string | undefined;
 
-  function syncOutline() {
+  function syncOutline(): void {
     frame = 0;
-    const headerBottom = header.getBoundingClientRect().bottom;
-    const readingLine = headerBottom + innerHeight * .12;
-    const atBottom = scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
-    let current: HTMLAnchorElement | undefined;
-
-    if (atBottom) {
-      const target = headings.find(({ heading }) => heading.matches(':target'));
-      const top = target?.heading.getBoundingClientRect().top;
-      current = target && top !== undefined && top >= headerBottom && top < footer.getBoundingClientRect().top
-        ? target.link : headings.at(-1)?.link;
-    } else {
-      for (const { link, heading } of headings) {
-        if (heading.getBoundingClientRect().top > readingLine) break;
-        current = link;
-      }
+    if (initialFragmentPending || pendingHash === location.hash) {
+      const target = document.querySelector(':target');
+      // The browser can complete an initial fragment jump after this script starts.
+      initialFragmentPending = initialFragmentPending && !target && document.readyState !== 'complete';
+      if (target) reading.navigateTo(entries.findIndex(({ heading }) => heading === target));
     }
+    pendingHash = undefined;
 
-    if (current !== active) {
-      active?.removeAttribute('aria-current');
-      current?.setAttribute('aria-current', 'location');
-      active = current;
-    }
+    const scrollTop = window.scrollY;
+    const height = window.innerHeight;
+    const readingLine = header.getBoundingClientRect().bottom + height * .12;
+    const atBottom = scrollTop > 0 && scrollTop + height >= document.documentElement.scrollHeight - 2;
+    const current = entries[reading.currentAt(scrollTop, readingLine, atBottom)]?.link;
+    if (current === active) return;
+
+    active?.removeAttribute('aria-current');
+    current?.setAttribute('aria-current', 'location');
+    active = current;
   }
 
-  function schedule() {
+  function schedule(): void {
     if (!frame) frame = requestAnimationFrame(syncOutline);
   }
 
+  function syncHistory(): void {
+    // New fragment navigations also emit popstate. Keep their pending anchor until the frame.
+    initialFragmentPending = false;
+    reading.navigateTo(-1);
+    schedule();
+  }
+
+  function beginNavigation(event: Event): void {
+    const { destination, hashChange, navigationType } = event as OutlineNavigateEvent;
+    if (!destination.sameDocument) return;
+    if (navigationType === 'traverse') {
+      pendingHash = undefined;
+    } else if (hashChange) {
+      // The destination URL can retain a text directive that location.hash omits.
+      pendingHash = new URL(destination.url).hash.split(':~:', 1)[0];
+      schedule();
+    }
+  }
+
+  function openFragment(event: MouseEvent): void {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (!(event.target instanceof Element)) return;
+
+    const link = event.target.closest<HTMLAnchorElement>(linkSelector);
+    if (!link) return;
+    pendingHash = link.hash;
+    schedule();
+  }
+
+  const navigation = (window as Window & { navigation?: EventTarget }).navigation;
+  navigation?.addEventListener('navigate', beginNavigation);
+  outline.addEventListener('click', openFragment);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
+  window.addEventListener('popstate', syncHistory);
   window.addEventListener('hashchange', schedule);
-  window.addEventListener('pageshow', schedule);
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      pendingHash = undefined;
+      syncHistory();
+    } else {
+      schedule();
+    }
+  });
   schedule();
 }
+
+const outline = document.querySelector<HTMLElement>('.post-outline');
+const header = document.querySelector<HTMLElement>('.site-head');
+if (outline && header) bindOutline(outline, header);
