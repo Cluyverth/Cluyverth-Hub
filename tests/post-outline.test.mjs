@@ -59,3 +59,141 @@ test('a new navigation replaces the previous fragment without requiring a scroll
   outline.navigateTo(-1);
   assert.equal(outline.currentAt(outline.scrollLimit), 3);
 });
+
+async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate' } = {}) {
+  class Link {
+    attributes = new Map();
+    constructor(hash) { this.hash = hash; }
+    closest() { return this; }
+    setAttribute(name, value) { this.attributes.set(name, value); }
+    removeAttribute(name) { this.attributes.delete(name); }
+  }
+
+  const window = Object.assign(new EventTarget(), {
+    scrollY: top,
+    innerHeight: 300,
+    performance: { getEntriesByType: () => [{ type: navigationType }] },
+  });
+  const location = { hash };
+  const headings = new Map([
+    ['#contexto', 240], ['#tres-linhas', 480], ['#modelo', 560], ['#exemplo', 680],
+  ].map(([fragment, offset]) => [fragment, {
+    getBoundingClientRect: () => ({ top: offset - window.scrollY }),
+  }]));
+  const links = Array.from(headings.keys(), (fragment) => new Link(fragment));
+  let onClick;
+  const outline = {
+    querySelectorAll: () => links,
+    addEventListener: (_type, listener) => { onClick = listener; },
+  };
+  const header = { getBoundingClientRect: () => ({ bottom: 64 }) };
+  const frames = [];
+  const globals = {
+    window,
+    location,
+    Element: Link,
+    requestAnimationFrame: (frame) => frames.push(frame),
+    document: {
+      readyState: 'complete',
+      documentElement: { scrollHeight: 700 },
+      getElementById: (id) => headings.get(`#${id}`),
+      querySelector: (selector) => ({
+        '.post-outline': outline,
+        '.site-head': header,
+        ':target': headings.get(location.hash),
+      })[selector],
+    },
+  };
+  t.after(() => {
+    for (const key of Object.keys(globals)) delete globalThis[key];
+  });
+  Object.assign(globalThis, globals);
+  const script = new URL('../src/scripts/post-outline.ts', import.meta.url);
+  script.searchParams.set('case', t.name);
+  await import(script.href);
+
+  function settle() {
+    for (const frame of frames.splice(0)) frame();
+  }
+
+  function moveTo(top) {
+    if (top === window.scrollY) return;
+    window.scrollY = top;
+    window.dispatchEvent(new Event('scroll'));
+  }
+
+  function navigate(hash, top) {
+    const changed = hash !== location.hash;
+    location.hash = hash;
+    if (changed) window.dispatchEvent(new Event('popstate'));
+    moveTo(top);
+    settle();
+    if (changed) window.dispatchEvent(new Event('hashchange'));
+    settle();
+  }
+
+  settle();
+  return {
+    assertCurrent(...fragments) {
+      assert.deepEqual(links.filter((link) => link.attributes.has('aria-current'))
+        .map((link) => [link.hash, link.attributes.get('aria-current')]),
+      fragments.map((fragment) => [fragment, 'location']));
+    },
+    click(hash, top) {
+      onClick({ target: links.find((link) => link.hash === hash), button: 0 });
+      navigate(hash, top);
+    },
+    traverse: navigate,
+    scroll(top) {
+      moveTo(top);
+      settle();
+    },
+    restoreFromCache() {
+      window.dispatchEvent(Object.assign(new Event('pageshow'), { persisted: true }));
+      settle();
+    },
+  };
+}
+
+test('direct link, click and re-click select their clamped fragments until the reader scrolls', async (t) => {
+  const article = await bindArticle(t, { hash: '#modelo', top: 400 });
+  article.assertCurrent('#modelo');
+  article.click('#tres-linhas', 400);
+  article.assertCurrent('#tres-linhas');
+  article.scroll(399);
+  article.assertCurrent('#exemplo');
+  article.click('#tres-linhas', 400);
+  article.assertCurrent('#tres-linhas');
+});
+
+test('Back and Forward follow the restored reading line, even without a scroll event', async (t) => {
+  const article = await bindArticle(t);
+  article.assertCurrent();
+  article.click('#modelo', 400);
+  article.assertCurrent('#modelo');
+  article.click('#tres-linhas', 400);
+  article.assertCurrent('#tres-linhas');
+  article.traverse('#modelo', 400);
+  article.assertCurrent('#exemplo');
+  article.traverse('#tres-linhas', 400);
+  article.assertCurrent('#exemplo');
+
+  article.scroll(140);
+  article.click('#modelo', 400);
+  article.traverse('#tres-linhas', 140);
+  article.assertCurrent('#contexto');
+  article.traverse('#modelo', 400);
+  article.assertCurrent('#exemplo');
+});
+
+test('a new document loaded by history traversal follows the restored position', async (t) => {
+  const article = await bindArticle(t, { hash: '#modelo', top: 400, navigationType: 'back_forward' });
+  article.assertCurrent('#exemplo');
+});
+
+test('restoring a cached article discards its previous fragment selection', async (t) => {
+  const article = await bindArticle(t, { hash: '#modelo', top: 400 });
+  article.assertCurrent('#modelo');
+  article.restoreFromCache();
+  article.assertCurrent('#exemplo');
+});
