@@ -123,11 +123,12 @@ async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate',
     window.dispatchEvent(new Event('scroll'));
   }
 
-  function navigate(hash, top, type = 'push') {
+  function navigate(destinationHash, top, type = 'push') {
+    const hash = destinationHash.split(':~:', 1)[0];
     const changed = hash !== location.hash;
     if (changed || type === 'traverse') {
       window.navigation?.dispatchEvent(Object.assign(new Event('navigate'), {
-        destination: { sameDocument: true, url: `https://example.test/caderno/artigo/${hash}` },
+        destination: { sameDocument: true, url: `https://example.test/caderno/artigo/${destinationHash}` },
         hashChange: changed,
         navigationType: type,
       }));
@@ -208,6 +209,14 @@ test('new fragment navigations without a click select their clamped anchor, but 
   article.open('#tres-linhas', 400, 'replace');
   article.assertCurrent('#tres-linhas');
   article.scroll(399);
+  article.assertCurrent('#exemplo');
+});
+
+test('opening an anchor with a text directive selects the heading exposed by the document', async (t) => {
+  const article = await bindArticle(t, { withNavigationApi: true, hash: '#tres-linhas', top: 400 });
+  article.open('#modelo:~:text=', 400);
+  article.assertCurrent('#modelo');
+  article.traverse('#tres-linhas', 400);
   article.assertCurrent('#exemplo');
 });
 

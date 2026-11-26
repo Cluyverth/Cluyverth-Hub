@@ -63,7 +63,8 @@ function bindOutline(outline: HTMLElement, header: HTMLElement): void {
     if (navigationType === 'traverse') {
       pendingHash = undefined;
     } else if (hashChange) {
-      pendingHash = new URL(destination.url).hash;
+      // The destination URL can retain a text directive that location.hash omits.
+      pendingHash = new URL(destination.url).hash.split(':~:', 1)[0];
       schedule();
     }
   }
