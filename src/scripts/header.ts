@@ -47,7 +47,6 @@ toggle.addEventListener('click', (event) => {
   void transition.finished.then(clear, clear);
 });
 const updateHeaderHeight = () => root.style.setProperty('--header-height', `${header.getBoundingClientRect().height}px`);
-new ResizeObserver(updateHeaderHeight).observe(header, { box: 'border-box' });
 
 const form = header.querySelector<HTMLFormElement>('.site-search')!;
 const input = form.querySelector<HTMLInputElement>('input')!;
@@ -193,4 +192,15 @@ function syncMenuLayout() {
 }
 mobile.addEventListener('change', syncMenuLayout);
 syncMenuLayout();
-updateHeaderHeight();
+
+function enableHeader() {
+  new ResizeObserver(updateHeaderHeight).observe(header, { box: 'border-box' });
+  // Keep a fallback link usable if the module loads while someone is tabbing through it.
+  if (mobile.matches && navigation.contains(document.activeElement)) setMenuOpen(true);
+  header.setAttribute('data-header-ready', '');
+  updateHeaderHeight();
+}
+
+const pageFade = (window as Window & { pageFadeFinished?: Promise<void> }).pageFadeFinished;
+if (pageFade) void pageFade.then(enableHeader, enableHeader);
+else enableHeader();

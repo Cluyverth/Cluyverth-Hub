@@ -39,6 +39,10 @@ const pages = [
           if (target instanceof HTMLImageElement) target.setAttribute('data-image-settled', '');
         }, true);
       }
+      // A late header module must not change the incoming layout mid-fade.
+      window.addEventListener('pagereveal', ({ viewTransition }) => {
+        window.pageFadeFinished = viewTransition?.finished;
+      });
       try {
         if (localStorage.getItem('cluyverth-estudio-theme') === 'light') {
           document.documentElement.dataset.theme = 'light';

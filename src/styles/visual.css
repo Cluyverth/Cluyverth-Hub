@@ -25,7 +25,7 @@
   background: transparent; color: var(--muted);
   border: 0; border-radius: 50%; cursor: pointer;
 }
-:root:not([data-js]) :is(.theme-toggle, .site-search),
+.site-head:not([data-header-ready]) :is(.theme-toggle, .site-search),
 :root[data-theme="light"] .theme-sun, :root:not([data-theme="light"]) .theme-moon { display: none; }
 .theme-toggle-label { display: none; }
 .theme-content { display: inline-flex; align-items: center; gap: .55rem; }
@@ -246,28 +246,28 @@ main { flex: 1; padding-top: clamp(.85rem, 1.8vw, 1.65rem); }
   }
 }
 @media (max-width: 760px) {
-  :root:not([data-js]) .site-head { position: relative; }
-  [data-js] .menu-toggle { display: grid; }
+  .site-head:not([data-header-ready]) { position: relative; }
+  .site-head[data-header-ready] .menu-toggle { display: grid; }
   .menu-toggle svg { width: 1.5rem; height: 1.5rem; }
   .header-controls { width: 100%; flex-direction: column; align-items: stretch; gap: .5rem; }
-  [data-js] .menu-toggle + .header-controls {
+  .site-head[data-header-ready] .menu-toggle + .header-controls {
     position: absolute; inset: 100% 0 auto;
     max-height: calc(100dvh - var(--header-height) - var(--footer-height));
     overflow: auto; padding: .75rem; border: 1px solid var(--line);
     background: var(--paper); box-shadow: 0 .35rem .8rem #0002;
   }
-  [data-js] .menu-toggle[aria-expanded="false"] + .header-controls { display: none; }
+  .site-head[data-header-ready] .menu-toggle[aria-expanded="false"] + .header-controls { display: none; }
   .nav-list { flex-direction: column; }
   .nav-list a { display: flex; padding-inline: .55rem; }
   .site-search { flex: none; flex-wrap: wrap; padding-inline: .55rem; }
   .site-search input { flex: 1; min-height: 44px; }
   #search-panel { position: static; width: 100%; margin-bottom: .5rem; box-shadow: none; }
-  [data-js] .theme-toggle {
+  .site-head[data-header-ready] .theme-toggle {
     display: flex; align-items: center; gap: .55rem;
     width: 100%; padding-inline: .55rem; border-radius: var(--r-control);
     color: var(--ink); font: inherit; font-size: .92rem; font-weight: 600;
   }
-  [data-js] .theme-toggle:is(:hover, :focus-visible) { color: var(--accent); }
+  .site-head[data-header-ready] .theme-toggle:is(:hover, :focus-visible) { color: var(--accent); }
   .theme-toggle-label { display: inline; }
 }
 @media (max-width: 650px) {
