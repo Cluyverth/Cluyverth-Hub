@@ -2,6 +2,13 @@ import { createOutlineReading } from './outline-reading.ts';
 
 const linkSelector = 'a[href^="#"]';
 
+// TypeScript's DOM declarations do not yet include the navigate event.
+type OutlineNavigateEvent = Event & {
+  readonly destination: { readonly sameDocument: boolean; readonly url: string };
+  readonly hashChange: boolean;
+  readonly navigationType: NavigationType;
+};
+
 function bindOutline(outline: HTMLElement, header: HTMLElement): void {
   const entries: { link: HTMLAnchorElement; heading: HTMLElement }[] = [];
   outline.querySelectorAll<HTMLAnchorElement>(linkSelector).forEach((link) => {
@@ -13,19 +20,19 @@ function bindOutline(outline: HTMLElement, header: HTMLElement): void {
   const reading = createOutlineReading(entries.length, (index) => entries[index].heading.getBoundingClientRect().top);
   let active: HTMLAnchorElement | undefined;
   let frame = 0;
-  const navigation = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
-  let initialFragmentPending = Boolean(location.hash) && navigation?.type !== 'back_forward';
-  let clickedHash: string | undefined;
+  const timing = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+  let initialFragmentPending = Boolean(location.hash) && timing?.type !== 'back_forward';
+  let pendingHash: string | undefined;
 
   function syncOutline(): void {
     frame = 0;
-    if (initialFragmentPending || clickedHash === location.hash) {
+    if (initialFragmentPending || pendingHash === location.hash) {
       const target = document.querySelector(':target');
       // The browser can complete an initial fragment jump after this script starts.
       initialFragmentPending = initialFragmentPending && !target && document.readyState !== 'complete';
       if (target) reading.navigateTo(entries.findIndex(({ heading }) => heading === target));
     }
-    clickedHash = undefined;
+    pendingHash = undefined;
 
     const scrollTop = window.scrollY;
     const height = window.innerHeight;
@@ -44,10 +51,21 @@ function bindOutline(outline: HTMLElement, header: HTMLElement): void {
   }
 
   function syncHistory(): void {
-    // popstate also fires for new fragments. Only the matching click may still pin one.
+    // New fragment navigations also emit popstate. Keep their pending anchor until the frame.
     initialFragmentPending = false;
     reading.navigateTo(-1);
     schedule();
+  }
+
+  function beginNavigation(event: Event): void {
+    const { destination, hashChange, navigationType } = event as OutlineNavigateEvent;
+    if (!destination.sameDocument) return;
+    if (navigationType === 'traverse') {
+      pendingHash = undefined;
+    } else if (hashChange) {
+      pendingHash = new URL(destination.url).hash;
+      schedule();
+    }
   }
 
   function openFragment(event: MouseEvent): void {
@@ -56,10 +74,12 @@ function bindOutline(outline: HTMLElement, header: HTMLElement): void {
 
     const link = event.target.closest<HTMLAnchorElement>(linkSelector);
     if (!link) return;
-    clickedHash = link.hash;
+    pendingHash = link.hash;
     schedule();
   }
 
+  const navigation = (window as Window & { navigation?: EventTarget }).navigation;
+  navigation?.addEventListener('navigate', beginNavigation);
   outline.addEventListener('click', openFragment);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
@@ -67,7 +87,7 @@ function bindOutline(outline: HTMLElement, header: HTMLElement): void {
   window.addEventListener('hashchange', schedule);
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-      clickedHash = undefined;
+      pendingHash = undefined;
       syncHistory();
     } else {
       schedule();

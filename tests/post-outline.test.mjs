@@ -60,7 +60,7 @@ test('a new navigation replaces the previous fragment without requiring a scroll
   assert.equal(outline.currentAt(outline.scrollLimit), 3);
 });
 
-async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate' } = {}) {
+async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate', withNavigationApi = false } = {}) {
   class Link {
     attributes = new Map();
     constructor(hash) { this.hash = hash; }
@@ -72,6 +72,7 @@ async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate' 
   const window = Object.assign(new EventTarget(), {
     scrollY: top,
     innerHeight: 300,
+    navigation: withNavigationApi ? new EventTarget() : undefined,
     performance: { getEntriesByType: () => [{ type: navigationType }] },
   });
   const location = { hash };
@@ -122,10 +123,17 @@ async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate' 
     window.dispatchEvent(new Event('scroll'));
   }
 
-  function navigate(hash, top) {
+  function navigate(hash, top, type = 'push') {
     const changed = hash !== location.hash;
+    if (changed || type === 'traverse') {
+      window.navigation?.dispatchEvent(Object.assign(new Event('navigate'), {
+        destination: { sameDocument: true, url: `https://example.test/caderno/artigo/${hash}` },
+        hashChange: changed,
+        navigationType: type,
+      }));
+    }
     location.hash = hash;
-    if (changed) window.dispatchEvent(new Event('popstate'));
+    if (changed || type === 'traverse') window.dispatchEvent(new Event('popstate'));
     moveTo(top);
     settle();
     if (changed) window.dispatchEvent(new Event('hashchange'));
@@ -143,7 +151,10 @@ async function bindArticle(t, { hash = '', top = 0, navigationType = 'navigate' 
       onClick({ target: links.find((link) => link.hash === hash), button: 0 });
       navigate(hash, top);
     },
-    traverse: navigate,
+    open: navigate,
+    traverse(hash, top) {
+      navigate(hash, top, 'traverse');
+    },
     scroll(top) {
       moveTo(top);
       settle();
@@ -183,6 +194,20 @@ test('Back and Forward follow the restored reading line, even without a scroll e
   article.traverse('#tres-linhas', 140);
   article.assertCurrent('#contexto');
   article.traverse('#modelo', 400);
+  article.assertCurrent('#exemplo');
+});
+
+test('new fragment navigations without a click select their clamped anchor, but traversal does not', async (t) => {
+  const article = await bindArticle(t, { withNavigationApi: true, hash: '#tres-linhas', top: 400 });
+  article.open('#modelo', 400);
+  article.assertCurrent('#modelo');
+  article.traverse('#tres-linhas', 400);
+  article.assertCurrent('#exemplo');
+  article.traverse('#modelo', 400);
+  article.assertCurrent('#exemplo');
+  article.open('#tres-linhas', 400, 'replace');
+  article.assertCurrent('#tres-linhas');
+  article.scroll(399);
   article.assertCurrent('#exemplo');
 });
 
