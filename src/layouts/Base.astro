@@ -1,0 +1,101 @@
+---
+import '../styles/componentes.css';
+import '../styles/visual.css';
+import '../styles/motion.css';
+import displayFont from '../styles/display.woff2?url';
+import LucideIcon from '../components/LucideIcon.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  page?: 'home' | 'journal' | 'post' | 'gallery';
+}
+
+const { title, description, page } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const pages = [
+  { href: '/', label: 'Início', page: 'home', icon: 'house' },
+  { href: '/caderno/', label: 'Caderno', page: 'journal', icon: 'book-open' },
+  { href: '/projetos/', label: 'Projetos', page: 'gallery', icon: 'layout-grid' },
+] as const;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#181715" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Caderno de Cluyverth Pereira" href="/rss.xml" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin="anonymous" />
+    <title>{title} | Cluyverth Pereira</title>
+    <script is:inline>
+      document.documentElement.setAttribute('data-js', '');
+      // Install before the parser discovers images, including ones served from cache.
+      for (const type of ['load', 'error']) {
+        document.addEventListener(type, ({ target }) => {
+          if (target instanceof HTMLImageElement) target.setAttribute('data-image-settled', '');
+        }, true);
+      }
+      try {
+        if (localStorage.getItem('cluyverth-estudio-theme') === 'light') {
+          document.documentElement.dataset.theme = 'light';
+          document.querySelector('meta[name="theme-color"]').content = '#f7f5ef';
+        }
+      } catch { /* Restricted storage still allows a page-level toggle. */ }
+    </script>
+  </head>
+  <body class={page}>
+    <a class="skip" href="#conteudo"><span class="ink-line">Pular para o conteúdo</span></a>
+    <div class="site">
+      <header class="site-head">
+        <a class="brand" href="/" aria-label="Cluyverth Pereira — início" translate="no">CP<span class="brand-dot" aria-hidden="true">.</span></a>
+        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="header-controls">
+          <LucideIcon name="menu" class="menu-open-icon" />
+          <LucideIcon name="x" class="menu-close-icon" />
+        </button>
+        <div id="header-controls" class="header-controls">
+          <nav aria-label="Menu principal">
+            <ul class="nav-list">
+              {pages.map((item) => (
+                <li><a href={item.href} aria-current={item.page === page ? 'page' : page === 'post' && item.page === 'journal' ? 'location' : undefined}>
+                  <LucideIcon name={item.icon} /><span class="ink-line">{item.label}</span>
+                </a></li>
+              ))}
+            </ul>
+          </nav>
+          <form class="site-search" role="search" aria-label="Busca do site">
+            <LucideIcon name="search" />
+            <input type="search" name="q" placeholder="Buscar…" autocomplete="off" aria-label="Buscar posts do Caderno" aria-controls="search-results" aria-describedby="search-hint" />
+            <div id="search-panel" hidden>
+              <p id="search-hint">
+                <span data-filter="#"><LucideIcon name="tags" /><kbd>#</kbd> tag</span>
+                <span data-filter="!"><LucideIcon name="text-align-start" /><kbd>!</kbd> categoria</span>
+              </p>
+              <p id="search-status" role="status"></p>
+              <div class="search-skeleton" aria-hidden="true" hidden><span></span><span></span></div>
+              <ol id="search-results" role="list"></ol>
+            </div>
+          </form>
+          <button class="theme-toggle" type="button" aria-label="Ativar tema claro">
+            <span class="theme-content">
+              <LucideIcon name="sun" class="theme-sun" />
+              <LucideIcon name="moon" class="theme-moon" />
+              <span class="theme-toggle-label">Ativar tema claro</span>
+            </span>
+          </button>
+        </div>
+      </header>
+      <main id="conteudo" tabindex="-1"><slot /></main>
+      <footer class="site-foot">
+        <span translate="no">Cluyverth Pereira</span>
+        <a class="footer-rss" href="/rss.xml"><LucideIcon name="rss" /><span class="ink-line">RSS</span></a>
+      </footer>
+    </div>
+    <script>
+      import '../scripts/header';
+    </script>
+  </body>
+</html>

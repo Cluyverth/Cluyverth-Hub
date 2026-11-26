@@ -1,0 +1,14 @@
+name: cluyverth-hub-dev
+services:
+  hub:
+    build:
+      context: .
+      target: development
+    ports:
+      - "127.0.0.1:4322:4321"
+    volumes:
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+      - ./vault/posts:/app/vault/posts:ro
+      - ./astro.config.mjs:/app/astro.config.mjs:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro

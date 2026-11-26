@@ -1,0 +1,38 @@
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  ::view-transition { pointer-events: none; }
+  ::view-transition-group(root) { animation-duration: 200ms; }
+
+  /* Keep the outgoing menu state out of the page crossfade. Theme changes still capture the whole page. */
+  :root:not([data-theme-wave]) .site-head { view-transition-name: site-header; }
+  :root:not([data-theme-wave]) .site-foot { view-transition-name: site-footer; }
+
+  ::view-transition-group(site-header) { z-index: 2; }
+  ::view-transition-group(site-footer) { z-index: 1; }
+  ::view-transition-group(site-header),
+  ::view-transition-group(site-footer),
+  ::view-transition-new(site-header),
+  ::view-transition-new(site-footer) { animation: none; }
+  ::view-transition-old(site-header),
+  ::view-transition-old(site-footer) { display: none; }
+
+  @starting-style {
+    .nav-list a[aria-current] > .ink-line { background-size: 0 1px; }
+  }
+
+  :root[data-theme-wave]::view-transition-group(root) { animation-duration: 420ms; }
+  :root[data-theme-wave]::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
+  :root[data-theme-wave]::view-transition-new(root) {
+    animation: theme-wave 420ms cubic-bezier(.2, .7, .35, 1) both;
+    mix-blend-mode: normal;
+  }
+  @keyframes theme-wave {
+    from { clip-path: circle(0 at var(--theme-origin)); }
+    to { clip-path: circle(var(--theme-radius) at var(--theme-origin)); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
+}

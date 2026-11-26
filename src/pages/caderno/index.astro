@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
+import PostFacts from '../../components/PostFacts.astro';
+import { getPosts, type Post } from '../../lib/posts';
+
+const description = 'Notas sobre tecnologia, jogos, história, escrita e cotidiano. Encontre um texto pelo assunto ou pelo que você lembra dele.';
+const posts = await getPosts();
+const monthName = new Intl.DateTimeFormat('pt-BR', { month: 'long', timeZone: 'UTC' });
+type MonthGroup = { start: number; items: Post[] };
+const years = new Map<string, { months: Map<string, MonthGroup>; count: number }>();
+
+for (const post of posts) {
+  const year = post.date.slice(0, 4);
+  const month = post.date.slice(0, 7);
+  let group = years.get(year);
+  if (!group) years.set(year, group = { months: new Map(), count: 0 });
+  let batch = group.months.get(month);
+  if (!batch) group.months.set(month, batch = { start: group.count + 1, items: [] });
+  batch.items.push(post);
+  group.count++;
+}
+---
+
+<Base title="Caderno" description={description} page="journal">
+  <header class="chapter-stage chapter-intro">
+    <div class="chapter-copy"><h1>Caderno</h1><p>{description}</p></div>
+  </header>
+  <section class="journal-index" aria-label="Artigos do caderno">
+    <div class="journal-toolbar">
+      {years.size > 0 && (
+        <label class="journal-filter" hidden>Ano
+          <select id="journal-year" aria-controls="journal-results">
+            <option value="">Todos os anos</option>
+            {[...years.keys()].map((year) => <option value={year}>{year}</option>)}
+          </select>
+        </label>
+      )}
+      <p class="journal-count" role="status" id="journal-count">{posts.length} {posts.length === 1 ? 'texto' : 'textos'}</p>
+    </div>
+    <div id="journal-results">
+      {[...years].map(([year, { months }]) => (
+        <section class="journal-year" data-year={year} aria-labelledby={`journal-year-${year}`}>
+          <h2 id={`journal-year-${year}`}>{year}</h2>
+          {[...months].map(([month, { start, items }]) => (
+            <div class="journal-month">
+              <p class="journal-month-name" id={`journal-month-${month}`}>{monthName.format(new Date(`${month}-01`))}</p>
+              <ol class="journal-list" start={start} aria-labelledby={`journal-month-${month}`} role="list">
+                {items.map(({ slug, title, summary, date, category, tags, readMinutes, wordCount }, index) => (
+                  <li class="journal-entry" id={`journal-entry-${slug}`}>
+                    <a class="journal-item" href={`/caderno/${slug}/`}>
+                      <span class="journal-number" aria-hidden="true">{String(start + index).padStart(2, '0')}</span>
+                      <div class="journal-item-copy">
+                        <p class="journal-category">{category}</p>
+                        <h3 class="ink-line">{title}</h3>
+                        <p>{summary}</p>
+                        {tags.length > 0 && <ul class="journal-tags" aria-label="Tags" role="list">{tags.map((tag) => <li><LucideIcon name="tags" />{tag}</li>)}</ul>}
+                      </div>
+                      <PostFacts {date} {readMinutes} {wordCount} archive />
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </section>
+      ))}
+    </div>
+    <div class="journal-pagination" hidden><button class="cta" type="button" aria-controls="journal-results">Mostrar mais textos</button></div>
+  </section>
+</Base>
+
+<script>
+  import '../../scripts/journal';
+</script>

@@ -1,0 +1,74 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
+import PostFacts from '../../components/PostFacts.astro';
+import { getHeadingOutline, getPosts, type Post } from '../../lib/posts';
+import Outline from './_Outline.astro';
+import '../../styles/markdown.css';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { related } = post;
+const { standfirst, references } = post.entry.data;
+const { Content, headings } = await render(post.entry);
+const outline = getHeadingOutline(headings);
+---
+
+<Base title={post.title} description={post.summary} page="post">
+  <nav class="breadcrumbs" aria-label="Voltar para a seção">
+    <a href="/caderno/">
+      <LucideIcon name="arrow-left" />
+      <span class="ink-line">Voltar ao caderno</span>
+    </a>
+  </nav>
+  <article class="article">
+    <div class:list={['post-layout', { 'post-layout--no-rail': !outline.length && !related.length && !references.length }]}>
+      <header class="article-head">
+        <p class="topics">{post.category}</p>
+        <h1>{post.title}</h1>
+        <p class="standfirst">{standfirst ?? post.summary}</p>
+        <p class="byline"><span translate="no">Cluyverth Pereira</span></p>
+        <PostFacts date={post.date} readMinutes={post.readMinutes} wordCount={post.wordCount} />
+        {post.tags.length > 0 && (
+          <ul class="token-list" aria-label="Tags" role="list">{post.tags.map((tag) => <li><LucideIcon name="tags" />{tag}</li>)}</ul>
+        )}
+      </header>
+      {(outline.length > 0 || related.length > 0 || references.length > 0) && (
+        <aside class="post-rail">
+          {outline.length > 0 && (
+            <nav aria-labelledby="toc-title">
+              <h2 id="toc-title">Sumário</h2>
+              <Outline items={outline} />
+            </nav>
+          )}
+          {references.length > 0 && (
+            <section aria-labelledby="refs-title">
+              <h2 id="refs-title">Referências</h2>
+              <ul role="list">{references.map(({ title, url }) => <li><a class="ink-line" href={url}>{title}</a></li>)}</ul>
+            </section>
+          )}
+          {related.length > 0 && (
+            <section class="rail-related" aria-labelledby="related-title">
+              <h2 id="related-title">Continue lendo</h2>
+              <ol>{related.map(({ slug, title }) => <li><a class="ink-line" href={`/caderno/${slug}/`}>{title}</a></li>)}</ol>
+            </section>
+          )}
+        </aside>
+      )}
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+</Base>
+
+<script>
+  import '../../scripts/post-outline';
+</script>

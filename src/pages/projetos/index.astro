@@ -1,0 +1,55 @@
+---
+import { projects } from '../../data/projects';
+import Base from '../../layouts/Base.astro';
+import ProjectLinks from '../../components/ProjectLinks.astro';
+
+const description = 'Projetos de código que desenvolvi. Veja a interface, a stack e o que está por trás de cada projeto.';
+---
+
+<Base title="Projetos" description={description} page="gallery">
+  <header class="chapter-stage chapter-intro">
+    <div class="chapter-copy">
+      <h1>Projetos</h1>
+      <p>{description}</p>
+    </div>
+  </header>
+  <div class="work-gallery">
+    <ol class="work-grid" role="list" aria-label="Catálogo de projetos">
+      {projects.map(({ id, title, summary, stack, screenshot, repository, live }, index) => (
+        <li>
+          <article class="work-card" id={id} tabindex="-1" aria-labelledby={`work-${id}`}>
+            <div class="work-overview">
+              <span class="work-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <div class="work-info">
+                <h2 class="ink-line" id={`work-${id}`}>{title}</h2>
+                <p>{summary}</p>
+                <dl class="work-stack-line">
+                  <dt>Stack</dt>
+                  <dd>{stack.join(' / ')}</dd>
+                </dl>
+              </div>
+              <a class="work-select" href={`#${id}`} aria-label={`Ver detalhes de ${title}`} aria-controls={`preview-${id}`}></a>
+            </div>
+            <div class="work-preview" id={`preview-${id}`}>
+              <div class="work-image"><img {...screenshot} loading="lazy" decoding="async" /></div>
+              <div class="work-preview-footer">
+                <div class="work-preview-info">
+                  <h2>{title}</h2>
+                  <p>{summary}</p>
+                  <ul class="token-list work-stack" role="list" aria-label="Stack">
+                    {stack.map((technology) => <li>{technology}</li>)}
+                  </ul>
+                </div>
+                <ProjectLinks {title} {repository} {live} />
+              </div>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+    <div class="work-stage"></div>
+  </div>
+  <script>
+    import '../../scripts/gallery';
+  </script>
+</Base>

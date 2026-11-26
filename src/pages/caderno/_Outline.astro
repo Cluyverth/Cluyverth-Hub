@@ -1,0 +1,20 @@
+---
+import type { OutlineItem } from '../../lib/posts';
+import Outline from './_Outline.astro';
+
+interface Props {
+  items: OutlineItem[];
+  nested?: boolean;
+}
+
+const { items, nested = false } = Astro.props;
+---
+
+<ol class:list={{ 'post-outline': !nested }}>
+  {items.map(({ slug, text, children }) => (
+    <li>
+      <a class="ink-line" href={`#${encodeURIComponent(slug)}`}>{text}</a>
+      {children.length > 0 && <Outline items={children} nested />}
+    </li>
+  ))}
+</ol>

@@ -1,0 +1,31 @@
+.post-rail > :first-child { margin-top: 0; }
+.post-layout.post-layout--no-rail { grid-template: 'intro' 'prose' / minmax(0, 1fr); }
+
+@media (min-width: 64rem) {
+  .post-rail {
+    max-block-size: calc(100dvh - var(--header-height) - var(--footer-height) - 3rem);
+    padding-inline-end: .25rem;
+    overflow: auto;
+  }
+}
+
+.prose ol { list-style: decimal; padding-inline-start: 1.4rem; margin-block: .65rem; }
+.prose li li { margin-block: .2em; }
+.prose :is(h5, h6) { margin-block: 1.25em .4em; font-size: 1em; line-height: 1.25; }
+.prose img { max-inline-size: 100%; block-size: auto; }
+.prose table { width: 100%; margin-block: 1.3em; border-collapse: collapse; font-size: .94em; }
+.prose :is(th, td) { padding: .4em .65em; border: 1px solid var(--line); text-align: start; overflow-wrap: anywhere; }
+.prose th { background: var(--panel); }
+.prose hr { margin-block: 1.5em; border: 0; border-top: 1px solid var(--line); }
+.prose :not(pre) > code {
+  padding: .12em .27em;
+  border-radius: var(--r-control);
+  background: var(--panel);
+  font-size: .9em;
+  box-decoration-break: clone;
+}
+
+.prose .astro-code { color: var(--shiki-dark, var(--ink)); background-color: var(--shiki-dark-bg, var(--panel)); }
+.prose .astro-code span { color: var(--shiki-dark, inherit); background-color: var(--shiki-dark-bg, transparent); }
+:root[data-theme='light'] .prose .astro-code { color: var(--shiki-light, var(--ink)); background-color: var(--shiki-light-bg, var(--panel)); }
+:root[data-theme='light'] .prose .astro-code span { color: var(--shiki-light, inherit); background-color: var(--shiki-light-bg, transparent); }

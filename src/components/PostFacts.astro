@@ -1,0 +1,18 @@
+---
+import LucideIcon from './LucideIcon.astro';
+import { formatPostDate } from '../lib/posts';
+
+interface Props {
+  date: string;
+  readMinutes: number;
+  wordCount: number;
+  archive?: boolean;
+}
+const { date, readMinutes, wordCount, archive } = Astro.props;
+const words = wordCount.toLocaleString('pt-BR');
+---
+<ul class:list={['article-facts', { 'journal-facts': archive }]} aria-label="Dados do artigo" role="list">
+  <li class="post-date"><LucideIcon name="calendar-days" /><time datetime={date}>{formatPostDate(date)}</time></li>
+  <li class="post-duration"><LucideIcon name="clock" /><span>{readMinutes} min de leitura</span></li>
+  <li class="post-words"><LucideIcon name="text-align-start" /><span>{words} {wordCount === 1 ? 'palavra' : 'palavras'}</span></li>
+</ul>

@@ -1,0 +1,16 @@
+**
+!package.json
+!package-lock.json
+!astro.config.mjs
+!tsconfig.json
+!src/
+!src/**
+!public/
+!public/**
+!vault/
+!vault/posts/
+!vault/posts/**
+!docker/
+!docker/nginx.conf
+**/.env
+**/.env.*

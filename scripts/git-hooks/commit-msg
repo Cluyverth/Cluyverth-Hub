@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+IFS= read -r subject < "$1" || :
+case "$subject" in
+  'Merge '*|'Revert '*) exit 0 ;;
+esac
+if ! printf '%s\n' "$subject" | grep -Eq '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([[:alnum:]_.\/-]+\))?!?: [^[:space:]]'; then
+  printf '%s\n' 'Use Conventional Commits, por exemplo: feat: adiciona filtro por ano.' >&2
+  exit 1
+fi
