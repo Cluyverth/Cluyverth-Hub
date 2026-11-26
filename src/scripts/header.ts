@@ -197,8 +197,15 @@ function enableHeader() {
   new ResizeObserver(updateHeaderHeight).observe(header, { box: 'border-box' });
   // Keep a fallback link usable if the module loads while someone is tabbing through it.
   if (mobile.matches && navigation.contains(document.activeElement)) setMenuOpen(true);
+  const content = mobile.matches && window.scrollY > 0 ? document.getElementById('conteudo') : null;
+  const contentTop = content?.getBoundingClientRect().top;
   header.setAttribute('data-header-ready', '');
   updateHeaderHeight();
+  if (content && contentTop !== undefined) {
+    // The viewport measurement accounts for any native scroll anchoring.
+    const shift = content.getBoundingClientRect().top - contentTop;
+    if (Math.abs(shift) >= 1) window.scrollBy({ top: shift, behavior: 'instant' });
+  }
 }
 
 const pageFade = (window as Window & { pageFadeFinished?: Promise<void> }).pageFadeFinished;
