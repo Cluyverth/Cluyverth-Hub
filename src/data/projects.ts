@@ -40,7 +40,7 @@ export const projects: Project[] = [
       alt: 'Galeria de imagens do Estúdio Template',
     },
     repository: 'https://github.com/Cluyverth/Estudio-Template',
-    live: 'https://estudio.cluyverth.com',
+    live: 'https://cluyverth.com/projetos/demo/estudio-template/',
   },
   {
     id: 'oficio-template',
@@ -54,6 +54,6 @@ export const projects: Project[] = [
       alt: 'Página de projetos do Ofício Template',
     },
     repository: 'https://github.com/Cluyverth/oficio-template',
-    live: 'https://oficio.cluyverth.com',
+    live: 'https://cluyverth.com/projetos/demo/oficio-template/',
   },
 ];
