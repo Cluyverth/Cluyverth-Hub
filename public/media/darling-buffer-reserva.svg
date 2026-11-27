@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="424" viewBox="0 0 352 424" role="img" aria-labelledby="title desc">
+  <title id="title">Como um slot vazio recebe o vertex buffer de reserva</title>
+  <desc id="desc">Exemplo sem nullDescriptor: o array de buffers tem três slots. O slot 1 está vazio. Se o endereço não avança entre vértices e a leitura cabe, o slot 1 passa a apontar para o buffer de reserva. Os vértices A, B e C leem os mesmos quatro bytes zerados. Caso contrário, a camada rejeita o desenho.</desc>
+  <rect width="352" height="424" rx="16" fill="#131b2b"/>
+  <g stroke="#687c98" fill="#1b283c">
+    <rect x="16" y="53" width="320" height="66" rx="8"/>
+    <rect x="32" y="148" width="288" height="67" rx="8"/>
+    <rect x="16" y="262" width="197" height="146" rx="8"/>
+    <rect x="230" y="262" width="106" height="146" rx="8"/>
+  </g>
+  <rect x="122" y="53" width="108" height="66" fill="#463924" stroke="#ffda9d"/>
+  <rect x="30" y="321" width="168" height="33" rx="5" fill="#243d40" stroke="#a5f3db"/>
+  <path d="M72 321v33m42-33v33m42-33v33" stroke="#64998f"/>
+  <g fill="none" stroke="#a7b9d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M176 120v20m-5-5 5 5 5-5"/>
+    <path d="M176 216v15H114v22m-5-5 5 5 5-5"/>
+    <path d="M176 231h107v22m-5-5 5 5 5-5"/>
+  </g>
+  <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#f4f7fd" font-size="16">
+    <text x="176" y="34" font-size="20" font-weight="700">Array de vertex buffers</text>
+    <g font-family="monospace">
+      <text x="69" y="78">[0]</text><text x="176" y="78">[1]</text><text x="283" y="78">[2]</text>
+      <text x="69" y="102">buffer X</text><text x="176" y="102" fill="#ffda9d">null</text><text x="283" y="102">buffer Y</text>
+    </g>
+    <text x="176" y="176">O endereço fica fixo</text>
+    <text x="176" y="200">e a leitura cabe na reserva?</text>
+    <text x="89" y="251" fill="#a5f3db">Sim</text>
+    <text x="308" y="251" fill="#ffda9d">Não</text>
+    <text x="114" y="287" font-weight="700">[1] → reserva</text>
+    <text x="114" y="310">Bytes 0–3</text>
+    <g font-family="monospace" fill="#a5f3db">
+      <text x="51" y="343">00</text><text x="93" y="343">00</text><text x="135" y="343">00</text><text x="177" y="343">00</text>
+    </g>
+    <text x="114" y="374">Vértices A, B e C</text>
+    <text x="114" y="399">Offsets: 0, 0, 0</text>
+    <text x="283" y="287">Passo 4 B</text>
+    <text x="283" y="310">0, 4, 8</text>
+    <text x="283" y="352" fill="#ffda9d">Rejeita</text>
+    <text x="283" y="378" fill="#ffda9d">o desenho</text>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="416" viewBox="0 0 352 416" role="img" aria-labelledby="title desc">
+  <title id="title">O que cada teste do H868 confirma</title>
+  <desc id="desc">Quatro etapas, cada uma comprovada por um sinal diferente: o módulo aparece em lsmod, frontend0 indica que o adaptador foi registrado, lock indica sincronização, e imagem e som no VLC confirmam a reprodução. Passar numa etapa não garante a próxima.</desc>
+  <rect width="352" height="416" rx="16" fill="#f6f8fa"/>
+  <g fill="#e5eef8" stroke="#91a9c2">
+    <rect x="16" y="48" width="320" height="66" rx="8"/>
+    <rect x="16" y="143" width="320" height="66" rx="8"/>
+    <rect x="16" y="238" width="320" height="66" rx="8"/>
+    <rect x="16" y="333" width="320" height="66" rx="8"/>
+  </g>
+  <g fill="none" stroke="#2f537a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M176 115v20m-5-5 5 5 5-5m-5 80v20m-5-5 5 5 5-5m-5 80v20m-5-5 5 5 5-5"/>
+  </g>
+  <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#162632" font-size="16">
+    <text x="176" y="31" font-size="18" font-weight="700">O que cada etapa confirma</text>
+    <text x="176" y="75" font-family="monospace" font-weight="700">lsmod mostra h868</text>
+    <text x="176" y="100">Módulo carregado</text>
+    <text x="176" y="170" font-family="monospace" font-weight="700">frontend0 existe</text>
+    <text x="176" y="195">Adaptador registrado</text>
+    <text x="176" y="265" font-family="monospace" font-weight="700">Sintonia com lock</text>
+    <text x="176" y="290">Sinal sincronizado</text>
+    <text x="176" y="360" font-weight="700">Imagem e som no VLC</text>
+    <text x="176" y="385">Fluxo recebido e reproduzido</text>
+  </g>
+</svg>

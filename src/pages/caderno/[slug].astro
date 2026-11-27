@@ -53,7 +53,7 @@ const outline = getHeadingOutline(headings);
           {references.length > 0 && (
             <section aria-labelledby="refs-title">
               <h2 id="refs-title">Referências</h2>
-              <ul role="list">{references.map(({ title, url }) => <li><a class="ink-line" href={url}>{title}</a></li>)}</ul>
+              <ol>{references.map((url) => <li><a class="ink-line" href={url}>{url.replace(/^https?:\/\//, '')}</a></li>)}</ol>
             </section>
           )}
           {related.length > 0 && (

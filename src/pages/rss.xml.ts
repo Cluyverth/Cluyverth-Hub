@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ site }) => {
   return new Response(`<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>Caderno de Cluyverth Pereira</title>
+  <title>Cluyverth Hub</title>
   <link>${notebook}</link>
   <description>Notas sobre tecnologia, jogos, história, escrita e cotidiano.</description>
   <language>pt-BR</language>

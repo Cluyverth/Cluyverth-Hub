@@ -21,7 +21,7 @@ const posts = defineCollection({
     summary: text,
     standfirst: text.optional(),
     related: z.array(slug).default([]),
-    references: z.array(z.object({ title: text, url: z.url({ protocol: /^https?$/ }) })).default([]),
+    references: z.array(z.url({ protocol: /^https?$/ })).default([]),
   }),
 });
 

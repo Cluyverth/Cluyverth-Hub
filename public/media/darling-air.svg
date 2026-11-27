@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 419" width="440" height="419" role="img" aria-labelledby="title desc">
+  <title id="title">Como o Metal descobre as entradas do shader</title>
+  <desc id="desc">A consulta vertexAttributes lê os metadados do shader em AIR. No exemplo, o primeiro item da lista tem índice de atributo 3 e o segundo tem índice 0. A posição na lista não determina a entrada do shader.</desc>
+  <rect width="440" height="419" rx="18" fill="#131b2b"/>
+  <g font-family="system-ui, sans-serif" fill="#f4f7fd">
+    <rect x="16" y="16" width="408" height="222" rx="12" fill="#1b283c" stroke="#687c98" stroke-width="2"/>
+    <text x="32" y="52" font-size="28" font-weight="700">Shader em AIR</text>
+    <rect x="32" y="68" width="168" height="152" rx="10" fill="#27364d"/>
+    <rect x="212" y="68" width="196" height="152" rx="10" fill="#2e3454"/>
+    <g font-size="23">
+      <text x="44" y="102" font-weight="700">Instruções</text>
+      <text x="44" y="139">Operações</text>
+      <text x="44" y="174">do shader</text>
+      <text x="226" y="102" font-weight="700">Metadados</text>
+      <text x="392" y="135" font-size="21" text-anchor="end">Índice</text>
+      <text x="226" y="170" fill="#ffda9d">Textura</text>
+      <text x="392" y="170" fill="#ffda9d" text-anchor="end">3</text>
+      <text x="226" y="205" fill="#a5f3db">Posição</text>
+      <text x="392" y="205" fill="#a5f3db" text-anchor="end">0</text>
+    </g>
+    <path d="M310 221v46m-8-8 8 8 8-8" fill="none" stroke="#d7caff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="16" y="276" width="408" height="127" rx="12" fill="#2e3454" stroke="#a499dd" stroke-width="2"/>
+    <text x="220" y="312" fill="#eeeaff" font-family="monospace" font-size="24" text-anchor="middle">vertexAttributes</text>
+    <text x="220" y="346" fill="#eeeaff" font-size="21" text-anchor="middle">Item → índice no shader</text>
+    <g font-family="monospace" font-size="23" text-anchor="middle">
+      <text x="118" y="382" fill="#ffda9d">[0] → 3</text>
+      <text x="322" y="382" fill="#a5f3db">[1] → 0</text>
+    </g>
+  </g>
+</svg>

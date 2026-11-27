@@ -72,7 +72,7 @@ Crie um `.md` em `vault/posts/`. O repositório e o conteúdo dessa pasta são p
 
 ```yaml
 ---
-title: Uma nota sobre interfaces
+title: Uma Nota Sobre Interfaces
 slug: uma-nota-sobre-interfaces
 category: Tecnologia
 tags: [web, acessibilidade]
@@ -81,5 +81,7 @@ summary: O que aprendi ao revisar a navegação por teclado.
 ---
 ```
 
-Use uma única categoria, um slug único e quantas tags precisar (`[]` para nenhuma). Comece as seções em `##`: o título já ocupa `h1`. Contagem de palavras e tempo estimado a 200 palavras/min são derivados do Markdown. O Caderno agrupa por ano e mês; o sumário vem dos títulos do artigo. Os 50 posts de teste ficam só no protótipo.
+Use uma única categoria e quantas tags precisar (`[]` para nenhuma). Preserve a grafia de nomes e siglas como `RSS` e `Nginx`. O slug e o nome do arquivo seguem o título inteiro, em minúsculas, sem acentos, com hífens no lugar dos espaços. No corpo, coloque o link no termo que ele explica, não na frase inteira. Em `references`, liste as URLs completas pra seção Referências.
+
+Comece as seções em `##`: o título já ocupa `h1`. Contagem de palavras e tempo estimado a 200 palavras/min são derivados do Markdown. O Caderno agrupa por ano e mês; o sumário vem dos títulos do artigo.
 

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 256" width="352" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">As duas direções da comunicação com o receptor</title>
+  <desc id="desc">O VLC pede a sintonia por frontend0. No sentido inverso, ele lê os pacotes de áudio e vídeo do H868 por dvr0.</desc>
+  <rect width="352" height="256" rx="14" fill="#f6f8fa"/>
+  <g stroke="#81a79a" fill="#e5f2ed">
+    <rect x="14" y="14" width="324" height="106" rx="8"/>
+    <rect x="14" y="136" width="324" height="106" rx="8"/>
+  </g>
+  <g font-family="system-ui, sans-serif" font-size="16" text-anchor="middle" fill="#162632">
+    <text x="176" y="45" font-size="19" font-weight="700">Pedido de sintonia</text>
+    <text x="53" y="88">VLC</text><text x="176" y="88" font-family="monospace">frontend0</text><text x="299" y="88">H868</text>
+    <text x="176" y="167" font-size="19" font-weight="700">Áudio e vídeo</text>
+    <text x="53" y="210">VLC</text><text x="176" y="210" font-family="monospace">dvr0</text><text x="299" y="210">H868</text>
+  </g>
+  <g stroke="#22624e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M82 82h39m-6-5 6 5-6 5m116-5h38m-6-5 6 5-6 5"/>
+    <path d="M269 204h-52m6-5-6 5 6 5m-89-5H82m6-5-6 5 6 5"/>
+  </g>
+</svg>

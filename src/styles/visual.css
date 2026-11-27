@@ -53,6 +53,7 @@ main { flex: 1; padding-top: clamp(.85rem, 1.8vw, 1.65rem); }
   height: 90svh;
   background: var(--chapter-art) center / 100% 100% no-repeat;
 }
+:is(.journal, .post) .site::before { filter: blur(5px); opacity: .4; }
 .chapter-stage { position: relative; }
 .profile-stage {
   display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
@@ -305,6 +306,7 @@ main { flex: 1; padding-top: clamp(.85rem, 1.8vw, 1.65rem); }
 .post-outline li::marker { content: counters(outline-item, '.') '. '; }
 .post-rail ol > li::marker { color: var(--accent); font-variant-numeric: tabular-nums; }
 .post-rail a { display: inline-block; padding-block-start: .28rem; color: var(--muted); }
+#refs-title + ol a { display: inline; overflow-wrap: anywhere; }
 .post .article .post-layout .prose { grid-area: prose; max-width: none; margin: 0; padding: 0; border: 0; }
 .post-layout .prose [id] { scroll-margin-top: 1.5rem; }
 .post-layout .prose :is(h2, h3, h4, h5, h6):target {

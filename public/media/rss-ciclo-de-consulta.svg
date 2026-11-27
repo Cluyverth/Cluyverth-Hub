@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="270" viewBox="0 0 352 270" role="img" aria-labelledby="title desc">
+  <title id="title">Uma publicação entre duas consultas RSS</title>
+  <desc id="desc">Horários ilustrativos. Às 9h o leitor consulta o feed e não vê novidade. Às 9h05 a fonte publica um item. Às 9h10 o leitor consulta de novo e só então o item aparece no aplicativo.</desc>
+  <rect width="352" height="270" rx="16" fill="#131b2b"/>
+  <g fill="#1b283c" stroke="#687c98">
+    <rect x="16" y="67" width="320" height="72" rx="8"/>
+    <rect x="16" y="153" width="320" height="101" rx="8"/>
+  </g>
+  <path d="M44 60h264M72 56v8m104-8v8m104-8v8" stroke="#a7b9d1"/>
+  <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#f4f7fd" font-size="16">
+    <text x="176" y="29" font-size="18" font-weight="700">Publicar ≠ aparecer no leitor</text>
+    <text x="72" y="52">09:00</text><text x="176" y="52">09:05</text><text x="280" y="52">09:10</text>
+    <text x="176" y="94" font-weight="700">Fonte</text>
+    <text x="176" y="121" fill="#ffda9d">Publica um item</text>
+    <text x="176" y="182" font-weight="700">Leitor RSS</text>
+    <text x="72" y="212">Consulta</text><text x="280" y="212">Consulta</text>
+    <text x="72" y="238" fill="#a7b9d1">Nada novo</text><text x="280" y="238" fill="#a5f3db">Novo item</text>
+  </g>
+</svg>

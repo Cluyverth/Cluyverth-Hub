@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="556" viewBox="0 0 352 556" role="img" aria-labelledby="title desc">
+  <title id="title">Da antena ao VLC</title>
+  <desc id="desc">O sinal de rádio entra no H868 pelo sintonizador. O demodulador recupera os pacotes de TV e a ponte USB os envia ao computador. No kernel Linux, o driver h868 entrega o fluxo pelo subsistema DVB. O VLC recebe o fluxo pela API DVB.</desc>
+  <defs>
+    <marker id="seta" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="m1 1 5 3-5 3" fill="none" stroke="#46545e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect width="352" height="556" rx="14" fill="#f6f8fa"/>
+  <rect x="16" y="88" width="320" height="195" rx="8" fill="#e5f2ed" stroke="#81a79a"/>
+  <rect x="16" y="333" width="320" height="132" rx="8" fill="#e5eef8" stroke="#91a9c2"/>
+  <g fill="none" stroke="#46545e" stroke-width="2" marker-end="url(#seta)">
+    <path d="M49 58v73"/>
+    <path d="M49 154v34"/>
+    <path d="M49 211v38"/>
+    <path d="M49 272v100"/>
+    <path d="M49 395v36"/>
+    <path d="M49 454v55"/>
+  </g>
+  <g fill="#fff" stroke-width="2.5">
+    <circle cx="49" cy="48" r="8" stroke="#46545e"/>
+    <circle cx="49" cy="143" r="8" stroke="#22624e"/>
+    <circle cx="49" cy="200" r="8" stroke="#22624e"/>
+    <circle cx="49" cy="261" r="8" stroke="#22624e"/>
+    <circle cx="49" cy="384" r="8" stroke="#2f537a"/>
+    <circle cx="49" cy="443" r="8" stroke="#2f537a"/>
+    <circle cx="49" cy="521" r="8" stroke="#46545e"/>
+  </g>
+  <g font-family="system-ui, sans-serif" fill="#162632">
+    <g font-size="19" font-weight="650">
+      <text x="78" y="51">Antena</text>
+      <text x="78" y="149">Sintonizador TDA18271</text>
+      <text x="78" y="206">Demodulador</text>
+      <text x="78" y="267">Ponte USB</text>
+      <text x="78" y="390">Driver h868</text>
+      <text x="78" y="449">Subsistema DVB</text>
+      <text x="78" y="527">VLC</text>
+    </g>
+    <g font-size="16" font-weight="650">
+      <text x="78" y="112" fill="#22624e">Receptor H868</text>
+      <text x="78" y="357" fill="#2f537a">Kernel Linux</text>
+    </g>
+    <g font-size="16" fill="#46545e">
+      <text x="78" y="74">Sinal de rádio</text>
+      <text x="78" y="231">Pacotes de TV digital</text>
+      <text x="78" y="314">Transferência via USB</text>
+      <text x="78" y="492">Leitura pela API DVB</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="336" height="380" viewBox="0 0 336 380" role="img" aria-labelledby="title desc">
+  <title id="title">Do nome do site à página</title>
+  <desc id="desc">O navegador obtém o IP do VPS consultando o DNS. Depois troca mensagens por HTTPS com o Nginx, que se comunica com o site por HTTP na rede Docker.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto-start-reverse">
+      <path d="m2 1 4 3-4 3" fill="none" stroke="#8fd7cb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect width="336" height="380" rx="16" fill="#14242d"/>
+  <g fill="#203743" stroke="#50707e">
+    <rect x="16" y="16" width="166" height="60" rx="8"/>
+    <rect x="222" y="16" width="98" height="60" rx="8"/>
+    <rect x="16" y="144" width="304" height="78" rx="8"/>
+    <rect x="16" y="298" width="304" height="66" rx="8"/>
+  </g>
+  <g stroke="#8fd7cb" stroke-width="2" marker-end="url(#arrow)">
+    <path d="M188 35h28"/>
+    <path d="M216 57h-28"/>
+  </g>
+  <g stroke="#8fd7cb" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)">
+    <path d="M40 86v48"/>
+    <path d="M40 232v56"/>
+  </g>
+  <g font-family="system-ui, sans-serif" fill="#f2f8fa">
+    <g font-size="17" font-weight="650">
+      <text x="32" y="41">Navegador</text>
+      <text x="238" y="41">DNS</text>
+      <text x="32" y="174">Nginx no VPS</text>
+      <text x="32" y="325">Contêiner do site</text>
+    </g>
+    <g font-size="14">
+      <text x="32" y="62">app.example.com</text>
+      <text x="238" y="62">IP do VPS</text>
+      <text x="32" y="198">Escolhe o site pelo domínio</text>
+      <text x="32" y="347">Envia a página de volta</text>
+    </g>
+    <g fill="#b1ece2" font-size="15">
+      <text x="56" y="115">HTTPS · porta 443 do VPS</text>
+      <text x="56" y="265">HTTP · rede Docker</text>
+    </g>
+  </g>
+</svg>

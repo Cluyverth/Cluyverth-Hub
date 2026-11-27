@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-labelledby="title desc">
+  <title id="title">Um buffer com dois atributos por vértice</title>
+  <desc id="desc">Dois vértices ocupam o mesmo buffer. No primeiro, a posição vale (1, 0) e a coordenada de textura vale (1, 1). Setas levam os dois pares às entradas de índice 0 e 3 do shader.</desc>
+  <rect width="640" height="400" rx="24" fill="#131b2b"/>
+  <g font-family="system-ui, sans-serif">
+    <text x="34" y="49" fill="#f4f7fd" font-size="30" font-weight="700">Vertex buffer</text>
+    <text x="606" y="48" fill="#e0e9f8" font-size="25" text-anchor="end">Leitura do vértice A</text>
+    <rect x="34" y="73" width="572" height="151" rx="14" fill="#1b283c" stroke="#687c98" stroke-width="2"/>
+    <path d="M35 148h570" stroke="#687c98" stroke-width="2"/>
+    <g fill="#e0e9f8" font-size="28" font-weight="600">
+      <text x="53" y="122">Vértice A</text>
+      <text x="53" y="196">Vértice B</text>
+    </g>
+    <g fill="#243d40">
+      <rect x="221" y="87" width="157" height="46" rx="8"/>
+      <rect x="221" y="161" width="157" height="46" rx="8"/>
+    </g>
+    <g fill="#463924">
+      <rect x="403" y="87" width="157" height="46" rx="8"/>
+      <rect x="403" y="161" width="157" height="46" rx="8"/>
+    </g>
+    <g font-size="29" font-weight="650" text-anchor="middle">
+      <text x="299" y="121" fill="#a5f3db">(1, 0)</text>
+      <text x="299" y="195" fill="#a5f3db">(2, 0)</text>
+      <text x="481" y="121" fill="#ffda9d">(1, 1)</text>
+      <text x="481" y="195" fill="#ffda9d">(0, 1)</text>
+    </g>
+    <g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M378 110h10v176h-93v26m-8-8 8 8 8-8" stroke="#a5f3db"/>
+      <path d="M560 110h12v176h-67v26m-8-8 8 8 8-8" stroke="#ffda9d"/>
+    </g>
+    <g font-size="27" font-weight="650">
+      <text x="34" y="340" fill="#f4f7fd">Entradas</text>
+      <text x="34" y="378" fill="#f4f7fd">do shader</text>
+      <rect x="195" y="322" width="200" height="53" rx="9" fill="#243d40"/>
+      <text x="295" y="357" fill="#a5f3db" text-anchor="middle">0 · posição</text>
+      <rect x="403" y="322" width="203" height="53" rx="9" fill="#463924"/>
+      <text x="505" y="357" fill="#ffda9d" text-anchor="middle">3 · textura</text>
+    </g>
+  </g>
+</svg>
