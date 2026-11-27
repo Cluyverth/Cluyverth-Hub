@@ -73,6 +73,7 @@ main { flex: 1; padding-top: clamp(.85rem, 1.8vw, 1.65rem); }
   line-height: .81; text-transform: uppercase; letter-spacing: -.085em;
 }
 .profile-lead { max-width: 43ch; color: var(--muted); font-size: clamp(1.04rem, 1.45vw, 1.35rem); }
+.profile-motto { max-inline-size: 43ch; margin: .85rem 0 0; color: var(--muted); font-size: .95rem; font-style: italic; }
 .profile-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.2rem; margin-top: 1.4rem; }
 .profile-actions .cta { min-height: 48px; padding-inline: 1.25rem; }
 .profile-contact { font-weight: 650; }

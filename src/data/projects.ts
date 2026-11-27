@@ -17,13 +17,13 @@ export const projects: Project[] = [
   {
     id: 'cluyverth-hub',
     title: 'Cluyverth Hub',
-    summary: 'Site pessoal estático para publicar textos e reunir links em um só lugar.',
-    stack: ['Astro', 'TypeScript'],
+    summary: 'Meu site pessoal, com um caderno de artigos em Markdown, busca, feed RSS e uma galeria dos meus projetos.',
+    stack: ['Astro', 'TypeScript', 'CSS'],
     screenshot: {
       src: '/media/screenshot-home.webp',
-      width: 1024,
-      height: 640,
-      alt: 'Página inicial do Cluyverth Hub',
+      width: 1906,
+      height: 950,
+      alt: 'Página inicial do Cluyverth Hub em desktop e celular, com retrato ilustrado e navegação adaptada.',
     },
     repository: 'https://github.com/Cluyverth/Cluyverth-Hub',
     live: 'https://cluyverth.com',

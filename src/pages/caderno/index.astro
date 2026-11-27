@@ -4,7 +4,7 @@ import LucideIcon from '../../components/LucideIcon.astro';
 import PostFacts from '../../components/PostFacts.astro';
 import { getPosts, type Post } from '../../lib/posts';
 
-const description = 'Notas sobre tecnologia, jogos, história, escrita e cotidiano. Encontre um texto pelo assunto ou pelo que você lembra dele.';
+const description = 'Notas sobre o que passa pela minha cabeça.';
 const posts = await getPosts();
 const monthName = new Intl.DateTimeFormat('pt-BR', { month: 'long', timeZone: 'UTC' });
 type MonthGroup = { start: number; items: Post[] };
