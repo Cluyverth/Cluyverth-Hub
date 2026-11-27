@@ -136,7 +136,7 @@ server {
 
 ## O Que Cada Bloco Faz
 
-<img src="/media/dockgate-vhosts.svg" width="336" height="354" alt="Na porta 80, app e blog redirecionam pra HTTPS; outros domínios recebem 404. Na 443, app.example.com vai pra app:80 e blog.example.com vai pra blog:80. SNI ausente ou desconhecido faz o Nginx recusar o TLS. Se o TLS já foi aceito, mas o Host não é reconhecido, o Nginx responde 404." />
+<img src="/media/dockgate-vhosts.svg" width="336" height="354" alt="Na porta 80, app e blog redirecionam pra HTTPS. Outros domínios recebem 404. Na 443, app.example.com vai pra app:80 e blog.example.com vai pra blog:80. SNI ausente ou desconhecido faz o Nginx recusar o TLS. Se o TLS já foi aceito, mas o Host não é reconhecido, o Nginx responde 404." />
 
 Na porta 80, `listen 80 default_server` indica qual bloco deve responder quando o domínio da requisição não corresponde aos nomes configurados. Esse bloco devolve `404` sem chamar nenhum dos sites. Quando o nome é reconhecido, o bloco com os dois domínios em `server_name` responde com `308`. Esse código instrui o navegador a repetir o pedido no endereço HTTPS sem trocar o método. `$host` coloca o domínio nessa URL e `$request_uri` preserva o caminho e os parâmetros. Um pedido a `http://blog.example.com/?ano=2026`, por exemplo, continua no blog e mantém `?ano=2026`.
 

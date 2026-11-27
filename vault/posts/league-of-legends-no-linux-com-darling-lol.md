@@ -37,7 +37,7 @@ Na [compilação](https://developer.apple.com/documentation/metal/building-a-sha
 
 No exemplo, a textura está na posição `[0]` da lista, mas o shader espera esse dado na entrada `3`. Já a posição do vértice aparece em `[1]` e vai pra entrada `0`. Usar a ordem da lista no lugar do índice declarado mandaria os valores pras entradas erradas.
 
-<img src="/media/darling-air.svg" width="440" height="419" alt="A consulta vertexAttributes lê os metadados do shader em AIR. O item 0 da lista descreve a textura na entrada 3; o item 1 descreve a posição na entrada 0.">
+<img src="/media/darling-air.svg" width="440" height="419" alt="A consulta vertexAttributes lê os metadados do shader em AIR. O item 0 da lista descreve a textura na entrada 3. O item 1 descreve a posição na entrada 0.">
 
 ## Quando Faltava Um Buffer
 

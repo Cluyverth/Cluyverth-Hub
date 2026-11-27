@@ -1,54 +1,54 @@
 # Cluyverth Hub
 
-Site pessoal de Cluyverth Pereira, com três capítulos: Início, Caderno e Projetos. O Caderno publica artigos em Markdown e oferece um feed RSS em `/rss.xml`.
+**English** · [Português (Brasil)](README.pt-BR.md)
+
+This is my personal site. I use it to share what I’m learning and show the projects I’ve built. I write in Markdown, and you can search my posts or follow them via RSS.
+
+[Visit the site](https://cluyverth.com/) · [RSS feed](https://cluyverth.com/rss.xml)
+
+![Cluyverth Hub homepage in light mode, with desktop and mobile views side by side](public/media/screenshot-home.webp)
 
 ## Stack
 
-| Camada | Ferramentas |
+| Layer | Tools |
 | --- | --- |
-| Páginas e build | Astro 7.1, com geração estática em `dist/` |
-| Interação | TypeScript 5.9 em modo estrito e APIs nativas do navegador |
-| Conteúdo | Markdown com frontmatter YAML, Astro Content Collections, Zod, Unified e Shiki |
-| Interface | HTML semântico, CSS nativo, Space Grotesk em WOFF2 local e ícones Lucide em SVG |
-| Desenvolvimento | npm, Node.js 22.12+ e Docker Compose; Docker e CI usam Node 24 |
+| Pages and build | Astro 7.1, with static output in `dist/` |
+| Interactivity | TypeScript 5.9 in strict mode and native browser APIs |
+| Content | Markdown with YAML frontmatter, Astro Content Collections, Zod, Unified, and Shiki |
+| Interface | Semantic HTML, native CSS, locally hosted Space Grotesk (WOFF2), and Lucide SVG icons |
+| Development | npm, Node.js 22.12+, and Docker Compose (Node 24 in Docker and CI) |
 
-Não há React, Tailwind, banco de dados, autenticação ou servidor de aplicação. O build entrega HTML pronto; o JavaScript fica nas interações que precisam dele. Bibliotecas de componentes e animação usadas como referência visual não são dependências.
+I build the site as static HTML with Astro and use TypeScript for the bits that need to run in the browser. There’s no database or application server.
 
-## Arquitetura
+## Architecture
 
-| Caminho | Responsabilidade |
+| Path | Responsibility |
 | --- | --- |
-| `src/pages/` | Rotas, artigos gerados e endpoints estáticos de busca e RSS |
-| `src/layouts/Base.astro` | Cabeçalho, busca, menu, rodapé e metadados comuns |
-| `src/components/` | Ícones, metadados dos posts e links de projetos |
-| `src/content.config.ts`, `src/lib/posts.ts` | Validação, ordenação dos posts, métricas e estrutura do sumário |
-| `vault/posts/`, `src/data/projects.ts` | Conteúdo editorial e catálogo de projetos, respectivamente |
-| `src/scripts/`, `src/styles/`, `public/` | Interação no navegador, aparência e arquivos públicos |
+| `src/pages/` | Routes, generated articles, and static search and RSS endpoints |
+| `src/layouts/Base.astro` | Shared header, search, menu, footer, and metadata |
+| `src/components/` | Icons, post metadata, and project links |
+| `src/content.config.ts`, `src/lib/posts.ts` | Post validation, ordering, metrics, and table of contents |
+| `vault/posts/`, `src/data/projects.ts` | Articles and project catalog, respectively |
+| `src/scripts/`, `src/styles/`, `public/` | Browser behavior, styles, and public assets |
 
-- **Início:** retrato em WebP com prioridade de download e dimensões declaradas para reservar espaço. Imagens têm skeleton enquanto carregam; o `alt` permanece no HTML.
-- **Caderno:** posts em ordem decrescente de data, agrupados por ano e mês. A numeração volta a `01` a cada ano e continua entre meses e em **Mostrar mais**, que revela itens já renderizados. No artigo, o sumário destaca o fragmento aberto por link direto ou pelo próprio sumário até a rolagem mudar. Em navegadores com a API de Navegação, trocar o fragmento na barra de endereço também destaca o destino. Ao voltar ou avançar, o destaque acompanha a posição restaurada pelo navegador.
-- **Projetos:** a ordem em `src/data/projects.ts` define a numeração e o primeiro destaque no desktop. A mesma prévia aparece à direita no desktop e dentro do item aberto no celular. O fragmento da URL, como `/projetos/#oficio-template`, permite abrir um projeto direto na galeria.
-- **Busca:** `/busca.json` é gerado no build com os posts e baixado só na primeira consulta. Sem prefixo, busca por título, tags, categoria, resumo e texto do post, ignorando diferenças de acento e caixa. `#` busca só nas tags, `!` só nas categorias. Campo vazio mostra instruções; se a requisição estiver pendente, aparece um skeleton. Conforme o Caderno crescer, monitore o tamanho do índice: ele inclui o corpo dos posts.
-- **Tema e navegação:** o tema começa escuro e a preferência é salva em `localStorage`. Em navegadores compatíveis, View Transitions fazem um fade de entrada de 200 ms, sem sobrepor páginas nem mover os controles do cabeçalho no desktop, e a onda circular de 420 ms na troca de tema. Em movimento reduzido, a troca é imediata.
-- **RSS:** `/rss.xml` sai da mesma coleção de posts. O feed é anunciado no HTML para autodetecção e fica acessível no rodapé que acompanha a rolagem.
+- **Home:** The WebP portrait loads with high priority. Explicit image dimensions reserve space, and loading placeholders keep the layout stable.
+- **Notebook:** Posts are grouped by year and month, newest first. Numbering restarts each year and continues across months and items revealed by **Show more**. The table of contents tracks scrolling, heading links, and the scroll position restored by browser history.
+- **Projects:** Catalog order sets the numbering and first desktop preview. The preview appears beside the list on desktop and inside the selected item on mobile. Open a project directly with a URL such as `/projetos/#oficio-template`.
+- **Search:** The browser loads the generated `/busca.json` index on the first query. Searches ignore case and accents and match titles, tags, categories, summaries, and post bodies. Prefix a query with `#` to search tags or `!` to search categories. The index includes full post bodies, so monitor its size as the notebook grows.
+- **Theme and navigation:** The site starts in dark mode and saves the preference in `localStorage`. Where supported, View Transitions fade in the incoming page in 200 ms without overlapping pages or moving desktop header controls. Theme changes use a 420 ms circular reveal. Reduced-motion preferences disable the animations.
+- **RSS:** `/rss.xml` uses the same post collection. The feed is discoverable through HTML metadata and linked in the footer.
 
-### Convenções de código
+## Development
 
-- Renderize conteúdo e links no Astro; use TypeScript para comportamento no navegador. Links navegam, botões executam ações, e atributos como `hidden`, `aria-current`, `aria-expanded` e `data-*` registram estados no próprio DOM.
-- Tipos estritos para props, catálogo e formato compartilhado do índice de busca; Zod valida os dados de entrada dos posts no build.
-- Variáveis CSS centralizam cores, espaçamento e movimento. Links de texto compartilham o sublinhado animado; ações destacadas seguem **Ver projetos**; ícones isolados destacam pela cor e a marca fica estática.
-
-## Desenvolvimento
-
-Com Docker e Docker Compose, na raiz deste checkout:
+With Docker and Docker Compose, run this from the checkout root:
 
 ```sh
 docker compose -f compose.dev.yaml up --build
 ```
 
-Abra <http://127.0.0.1:4322/>. Alterações em `src/`, `public/` e `vault/posts/` entram sem rebuild da imagem. Use `Ctrl+C` para parar o servidor.
+Open <http://127.0.0.1:4322/>. Changes in `src/`, `public/`, and `vault/posts/` do not require rebuilding the image. Press `Ctrl+C` to stop the server.
 
-Sem Docker, use Node.js 22.12+ (CI: Node 24) e npm:
+Without Docker, use Node.js 22.12+ (CI uses Node 24) and npm:
 
 ```sh
 npm ci
@@ -58,30 +58,14 @@ npm test
 npm run build
 ```
 
-`npm test` usa o runner nativo do Node, com remoção de tipos do TypeScript habilitada explicitamente para funcionar desde o Node 22.12. Não precisa abrir o navegador nem adicionar dependências.
+`npm test` uses Node’s built-in test runner with TypeScript type stripping enabled explicitly for Node 22.12 compatibility. It does not require a browser or extra dependencies.
 
-## Publicação com Docker
+## Deploy with Docker
 
-Na VPS, `docker compose up --build -d` gera e inicia a imagem `cluyverth-hub:1.0.0`. O build produz o `dist/`; o contêiner final roda Nginx sem root e serve apenas os arquivos estáticos, sem Node, código-fonte ou volumes de desenvolvimento.
+On the VPS, run `docker compose up --build -d` to build and start `cluyverth-hub:1.0.0`. The build writes to `dist/`. The final image uses unprivileged Nginx to serve only the static files, without Node, source code, or development mounts.
 
-O site fica em `127.0.0.1:8080` por padrão. Se a porta já estiver ocupada, use `HUB_PORT=8081 docker compose up -d`. Um proxy no host deve encaminhar `cluyverth.com` para essa porta. Se o proxy também rodar em Docker, ligue os dois serviços a uma rede compartilhada e aponte o proxy para `hub:8080`; não use o `localhost` de dentro do contêiner do proxy. TLS e roteamento por domínio ficam a cargo do proxy.
+The site listens on `127.0.0.1:8080` by default. If that port is taken, run `HUB_PORT=8081 docker compose up -d`. A reverse proxy on the host should forward `cluyverth.com` to that port. If the proxy also runs in Docker, connect both services to a shared network and point it to `hub:8080`, not to `localhost` inside the proxy container. The proxy handles TLS and domain routing.
 
-## Publicar no Caderno
+## License
 
-Crie um `.md` em `vault/posts/`. O repositório e o conteúdo dessa pasta são públicos: não coloque drafts privados, credenciais ou dados sensíveis no Git.
-
-```yaml
----
-title: Uma Nota Sobre Interfaces
-slug: uma-nota-sobre-interfaces
-category: Tecnologia
-tags: [web, acessibilidade]
-date: '2026-11-25'
-summary: O que aprendi ao revisar a navegação por teclado.
----
-```
-
-Use uma única categoria e quantas tags precisar (`[]` para nenhuma). Preserve a grafia de nomes e siglas como `RSS` e `Nginx`. O slug e o nome do arquivo seguem o título inteiro, em minúsculas, sem acentos, com hífens no lugar dos espaços. No corpo, coloque o link no termo que ele explica, não na frase inteira. Em `references`, liste as URLs completas pra seção Referências.
-
-Comece as seções em `##`: o título já ocupa `h1`. Contagem de palavras e tempo estimado a 200 palavras/min são derivados do Markdown. O Caderno agrupa por ano e mês; o sumário vem dos títulos do artigo.
-
+[MIT](LICENSE). The bundled [Space Grotesk font](src/styles/OFL.txt) is licensed under the SIL Open Font License.

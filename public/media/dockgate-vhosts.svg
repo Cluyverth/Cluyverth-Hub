@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="336" height="354" viewBox="0 0 336 354" role="img" aria-labelledby="title desc">
   <title id="title">Qual bloco server atende o pedido?</title>
-  <desc id="desc">Na porta 80, app e blog redirecionam para HTTPS; outro domínio recebe 404. Na porta 443, app segue para app:80 e blog para blog:80. Um SNI sem nome reconhecido faz o Nginx recusar o TLS. Se o TLS já foi aceito, mas o Host é desconhecido, a resposta é 404.</desc>
+  <desc id="desc">Na porta 80, app e blog redirecionam para HTTPS. Outros domínios recebem 404. Na porta 443, app segue para app:80 e blog para blog:80. Um SNI sem nome reconhecido faz o Nginx recusar o TLS. Se o TLS já foi aceito, mas o Host é desconhecido, a resposta é 404.</desc>
   <rect width="336" height="354" rx="16" fill="#14242d"/>
   <g fill="#203743" stroke="#50707e">
     <rect x="16" y="16" width="304" height="151" rx="8"/>

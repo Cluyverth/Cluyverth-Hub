@@ -21,7 +21,7 @@ Você sabia que dá pra acompanhar o que te interessa na internet sem passar por
 
 ## 1. Como Funciona
 
-Um feed é uma lista de novidades que o site publica num formato que o leitor entende. Você cola o endereço do feed no aplicativo, e ele passa a consultá-lo de tempos em tempos. Se sair um item entre duas consultas, ele só aparece no leitor quando o aplicativo buscar a lista de novo. Algumas fontes incluem o texto inteiro; outras trazem só um resumo e um link.
+Um feed é uma lista de novidades que o site publica num formato que o leitor entende. Você cola o endereço do feed no aplicativo, e ele passa a consultá-lo de tempos em tempos. Se sair um item entre duas consultas, ele só aparece no leitor quando o aplicativo buscar a lista de novo. Algumas fontes incluem o texto inteiro. Outras trazem só um resumo e um link.
 
 <img src="/media/rss-ciclo-de-consulta.svg" width="352" height="270" alt="Horários ilustrativos: às 9h o leitor RSS consulta o feed e não vê novidade. Às 9h05 a fonte publica um item. Às 9h10, na próxima consulta, o item aparece no leitor.">
 
