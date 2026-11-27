@@ -46,7 +46,7 @@ Com Docker e Docker Compose, na raiz deste checkout:
 docker compose -f compose.dev.yaml up --build
 ```
 
-Abra <http://127.0.0.1:4322/>. Alterações em `src/`, `public/` e `vault/posts/` entram sem rebuild da imagem. Use `Ctrl+C` para parar o servidor.
+Abra <http://localhost:4322/>. Alterações em `src/`, `public/` e `vault/posts/` entram sem rebuild da imagem. Use `Ctrl+C` para parar o servidor.
 
 Sem Docker, use Node.js 22.12+ (CI: Node 24) e npm:
 
@@ -62,9 +62,11 @@ npm run build
 
 ## Publicação com Docker
 
+Antes de gerar o build da sua cópia, ajuste `site` em [`astro.config.mjs`](astro.config.mjs) pra sua URL pública, por exemplo `https://example.com`. O Astro usa esse valor nas URLs canônicas e nos links do RSS.
+
 Na VPS, `docker compose up --build -d` gera e inicia a imagem `cluyverth-hub:1.0.0`. O build produz o `dist/`. O contêiner final roda Nginx sem root e serve apenas os arquivos estáticos, sem Node, código-fonte ou volumes de desenvolvimento.
 
-O site fica em `127.0.0.1:8080` por padrão. Se a porta já estiver ocupada, use `HUB_PORT=8081 docker compose up -d`. Um proxy no host deve encaminhar `cluyverth.com` para essa porta. Se o proxy também rodar em Docker, ligue os dois serviços a uma rede compartilhada e aponte o proxy para `hub:8080`, não para o `localhost` de dentro do contêiner do proxy. TLS e roteamento por domínio ficam a cargo do proxy.
+O site fica em `127.0.0.1:8080` por padrão. Se a porta já estiver ocupada, use `HUB_PORT=8081 docker compose up -d`. Configure o proxy reverso pra atender seu domínio e cuidar do TLS. Se o proxy rodar no host, aponte pra `127.0.0.1:8080` ou pra porta que você escolheu. Se rodar em Docker, conecte o proxy e o serviço do site à mesma rede e aponte pra `hub:8080`, não pra `localhost`.
 
 ## Licença
 

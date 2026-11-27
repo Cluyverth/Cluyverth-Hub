@@ -46,7 +46,7 @@ With Docker and Docker Compose, run this from the checkout root:
 docker compose -f compose.dev.yaml up --build
 ```
 
-Open <http://127.0.0.1:4322/>. Changes in `src/`, `public/`, and `vault/posts/` do not require rebuilding the image. Press `Ctrl+C` to stop the server.
+Open <http://localhost:4322/>. Changes in `src/`, `public/`, and `vault/posts/` do not require rebuilding the image. Press `Ctrl+C` to stop the server.
 
 Without Docker, use Node.js 22.12+ (CI uses Node 24) and npm:
 
@@ -62,9 +62,11 @@ npm run build
 
 ## Deploy with Docker
 
+Before building your own copy, set `site` in [`astro.config.mjs`](astro.config.mjs) to your public URL, for example `https://example.com`. Astro uses it for canonical URLs and RSS links.
+
 On the VPS, run `docker compose up --build -d` to build and start `cluyverth-hub:1.0.0`. The build writes to `dist/`. The final image uses unprivileged Nginx to serve only the static files, without Node, source code, or development mounts.
 
-The site listens on `127.0.0.1:8080` by default. If that port is taken, run `HUB_PORT=8081 docker compose up -d`. A reverse proxy on the host should forward `cluyverth.com` to that port. If the proxy also runs in Docker, connect both services to a shared network and point it to `hub:8080`, not to `localhost` inside the proxy container. The proxy handles TLS and domain routing.
+The site listens on `127.0.0.1:8080` by default. If that port is taken, run `HUB_PORT=8081 docker compose up -d`. Configure your reverse proxy to serve your domain and handle TLS. If the proxy runs on the host, point it to `127.0.0.1:8080` or the host port you selected. If the proxy runs in Docker, connect it and the site service to a shared network and point it to `hub:8080`, not to `localhost`.
 
 ## License
 
