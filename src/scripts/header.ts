@@ -179,6 +179,12 @@ header.addEventListener('keydown', (event) => {
   setMenuOpen(false);
   menu.focus();
 });
+header.addEventListener('click', (event) => {
+  if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  if (event.target instanceof Element && event.target.closest<HTMLAnchorElement>('.brand, .nav-list a')?.href === location.href) {
+    event.preventDefault();
+  }
+});
 document.addEventListener('click', (event) => {
   if (mobile.matches && isMenuOpen() && event.target instanceof Node && !header.contains(event.target)) {
     if (header.contains(document.activeElement)) menu.focus();
@@ -200,6 +206,8 @@ function enableHeader() {
   const content = mobile.matches && window.scrollY > 0 ? document.getElementById('conteudo') : null;
   const contentTop = content?.getBoundingClientRect().top;
   header.setAttribute('data-header-ready', '');
+  form.inert = false;
+  toggle.inert = false;
   updateHeaderHeight();
   if (content && contentTop !== undefined) {
     // The viewport measurement accounts for any native scroll anchoring.

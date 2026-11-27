@@ -25,7 +25,7 @@
   background: transparent; color: var(--muted);
   border: 0; border-radius: 50%; cursor: pointer;
 }
-.site-head:not([data-header-ready]) :is(.theme-toggle, .site-search),
+:root:not([data-js]) .site-head :is(.theme-toggle, .site-search),
 :root[data-theme="light"] .theme-sun, :root:not([data-theme="light"]) .theme-moon { display: none; }
 .theme-toggle-label { display: none; }
 .theme-content { display: inline-flex; align-items: center; gap: .55rem; }
@@ -247,6 +247,7 @@ main { flex: 1; padding-top: clamp(.85rem, 1.8vw, 1.65rem); }
 }
 @media (max-width: 760px) {
   .site-head:not([data-header-ready]) { position: relative; }
+  .site-head:not([data-header-ready]) :is(.theme-toggle, .site-search) { display: none; }
   .site-head[data-header-ready] .menu-toggle { display: grid; }
   .menu-toggle svg { width: 1.5rem; height: 1.5rem; }
   .header-controls { width: 100%; flex-direction: column; align-items: stretch; gap: .5rem; }

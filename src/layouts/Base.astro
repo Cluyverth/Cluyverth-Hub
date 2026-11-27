@@ -70,7 +70,7 @@ const pages = [
               ))}
             </ul>
           </nav>
-          <form class="site-search" role="search" aria-label="Busca do site">
+          <form class="site-search" role="search" aria-label="Busca do site" inert>
             <LucideIcon name="search" />
             <input type="search" name="q" placeholder="Buscar…" autocomplete="off" aria-label="Buscar posts do Caderno" aria-controls="search-results" aria-describedby="search-hint" />
             <div id="search-panel" hidden>
@@ -83,7 +83,7 @@ const pages = [
               <ol id="search-results" role="list"></ol>
             </div>
           </form>
-          <button class="theme-toggle" type="button" aria-label="Ativar tema claro">
+          <button class="theme-toggle" type="button" aria-label="Ativar tema claro" inert>
             <span class="theme-content">
               <LucideIcon name="sun" class="theme-sun" />
               <LucideIcon name="moon" class="theme-moon" />

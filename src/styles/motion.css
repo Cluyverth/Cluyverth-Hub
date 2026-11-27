@@ -2,7 +2,19 @@
   @view-transition { navigation: auto; }
 
   ::view-transition { pointer-events: none; }
-  ::view-transition-group(root) { animation-duration: 200ms; }
+
+  /* Fade in the new page over its background rather than stacking two pages of text. */
+  :root:not([data-theme-wave])::view-transition { background: var(--paper); }
+  :root:not([data-theme-wave])::view-transition-group(root) { animation: none; }
+  :root:not([data-theme-wave])::view-transition-old(root) { display: none; }
+  :root:not([data-theme-wave])::view-transition-new(root) {
+    animation: page-reveal 200ms ease-out both;
+    mix-blend-mode: normal;
+  }
+  @keyframes page-reveal {
+    from { opacity: .65; }
+    to { opacity: 1; }
+  }
 
   /* Keep the outgoing menu state out of the page crossfade. Theme changes still capture the whole page. */
   :root:not([data-theme-wave]) .site-head { view-transition-name: site-header; }
